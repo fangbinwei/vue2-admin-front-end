@@ -1,0 +1,35 @@
+<template>
+  <el-col :span="19" :offset="5" class="main">
+    <el-tabs v-model="activeName">
+      <el-tab-pane label="文章管理" name="article-manage">
+      </el-tab-pane>
+      <el-tab-pane label="类别管理" name="category-manage"></el-tab-pane>
+      <el-tab-pane label="评论管理" name="comment-manage"></el-tab-pane>
+      <el-tab-pane label="博客配置" name="blog-manage"></el-tab-pane>
+      <el-tab-pane label="草稿箱" name="draft-manage"></el-tab-pane>
+      <el-tab-pane label="回收站" name="recycle-manage"></el-tab-pane>
+    </el-tabs>
+    <keep-alive>
+      <router-view></router-view>
+    </keep-alive>
+  </el-col>
+</template>
+<script>
+  export default {
+    data () {
+      return {
+        activeName: 'article-manage'
+      }
+    },
+    watch: {
+      activeName () {
+        console.log('watch')
+        this.$router.push({name: this.activeName})
+      }
+    }
+  }
+
+</script>
+<style>
+
+</style>
