@@ -1,7 +1,7 @@
 <template>
  <div>
    <div class="filter">
-     <el-select v-model="category" placeholder="类别" size="mini">
+     <el-select v-model="selectCategory" placeholder="类别" size="mini">
        <el-option
          v-for="item in categoryData"
          :key="item.value"
@@ -13,15 +13,24 @@
    </div>
    <div class="article-list">
      <el-table
-       :data="tableData"
+       :data="articleData"
        border
-       style="width: 90%">
+       height="250"
+       style="width: 95%">
        <el-table-column
          label="标题"
-         width="350">
+         width="250">
+         <template scope="scope">
+           <el-icon name="document"></el-icon>
+           <span style="margin-left: 10px">{{ scope.row.title }}</span>
+         </template>
+       </el-table-column>
+       <el-table-column
+         label="发表时间"
+         width="200">
          <template scope="scope">
            <el-icon name="time"></el-icon>
-           <span style="margin-left: 10px">{{ scope.row.date }}</span>
+           <span style="margin-left: 10px">{{ scope.row.showCreateTime }}</span>
          </template>
        </el-table-column>
        <el-table-column
@@ -29,7 +38,7 @@
          width="100">
          <template scope="scope">
            <div slot="reference" class="name-wrapper">
-             <el-tag>{{ scope.row.name }}</el-tag>
+             <el-tag type="primary">{{ scope.row.category }}</el-tag>
            </div>
          </template>
        </el-table-column>
@@ -38,7 +47,7 @@
          width="100">
          <template scope="scope">
            <div slot="reference" class="name-wrapper">
-             <el-tag>{{ scope.row.name }}</el-tag>
+             <el-tag type="success">{{ scope.row.visit }}</el-tag>
            </div>
          </template>
        </el-table-column>
@@ -47,7 +56,7 @@
          width="100">
          <template scope="scope">
            <div slot="reference" class="name-wrapper">
-             <el-tag>{{ scope.row.name }}</el-tag>
+             <el-tag type="danger"></el-tag>
            </div>
          </template>
        </el-table-column>
@@ -71,50 +80,27 @@
      </el-table>
    </div>
    <el-pagination
-     layout="prev, pager, next"
-     :total="50">
+     @size-change="handleSizeChange"
+     @current-change="handleCurrentChange"
+     :current-page="currentPage"
+     :page-sizes="[5, 10, 20]"
+     :page-size="pageSize"
+     layout="total, prev, pager, next, sizes"
+     :total="totalArticle">
    </el-pagination>
  </div>
 </template>
 <script>
+import axios from 'axios'
 export default {
   data () {
     return {
-      categoryData: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶',
-        disabled: true
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
-      }],
-      category: '',
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }]
+      currentPage: 1,
+      pageSize: 5,
+      articleData: [],
+      categoryData: [],
+      selectCategory: '',
+      totalArticle: 0
     }
   },
   methods: {
@@ -123,7 +109,39 @@ export default {
     },
     handleDelete (index, row) {
       console.log(index, row)
+    },
+    // 每页显示x条
+    handleSizeChange (size) {
+      this.pageSize = size
+      this.currentPage = 1
+      this.updateArticleList()
+    },
+    // 当前第x页
+    handleCurrentChange (page) {
+      this.currentPage = page
+      this.updateArticleList()
+    },
+    updateArticleList () {
+      let reqParams = {
+        page: this.currentPage,
+        pageSize: this.pageSize
+      }
+      axios.get('/api/getArticleList', {params: reqParams})
+        .then((res) => {
+          let queryResult = res.data.result
+          this.articleData = queryResult.list
+          this.totalArticle = queryResult.total
+        })
+        .catch((err) => {
+          console.log('err', err)
+        })
     }
+  },
+  mounted () {
+    this.updateArticleList()
+  },
+  watch: {
+    '$route': 'updateArticleList'
   }
 }
 </script>

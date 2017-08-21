@@ -3,7 +3,7 @@
     <div class="editor-wrap">
       <div class="editor-header">
         <div class="article-title">
-          <el-input v-model="formItem.title" placeholder="文章标题"></el-input>
+          <el-input v-model.trim="formItem.title" placeholder="文章标题"></el-input>
         </div>
         <div class="date">
           <el-date-picker
@@ -17,22 +17,22 @@
         </div>
         <div class="article-category">
           <el-select
-            v-model="selectedCate"
+            v-model.trim="formItem.category"
             filterable
             allow-create
-            placeholder="请选择文章标签">
+            placeholder="请选择文章类别">
             <el-option
-              v-for="item in cateOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
+              v-for="(item,index) in categoryOptions"
+              :key="index"
+              :label="item"
+              :value="item">
             </el-option>
           </el-select>
         </div>
-        <el-button type="success" class="commit" @click="submit">发表博客</el-button>
+        <el-button type="success" class="commit" @click="submit" :disabled="submitDisable">发表文章</el-button>
       </div>
       <div id="editor">
-        <mavon-editor @save="save" @change="change"></mavon-editor>
+        <mavon-editor @save="save" @change="change" :value="editValue"></mavon-editor>
       </div>
     </div>
   </div>
@@ -42,30 +42,39 @@
   import 'mavon-editor/dist/css/index.css'
   import axios from 'axios'
   export default {
+    components: {
+      mavonEditor
+    },
     data () {
       return {
+        editValue: '',
+        submitDisable: false,
         formItem: {
           title: '',
           createTime: new Date(),
           abstract: '',
           content: '',
-          draft: ''
+          draft: '',
+          category: ''
         },
-        cateOptions: [{
-          value: 'HTML',
-          label: 'HTML'
-        }, {
-          value: 'CSS',
-          label: 'CSS'
-        }, {
-          value: 'JavaScript',
-          label: 'JavaScript'
-        }],
-        selectedCate: ''
+        categoryOptions: []
       }
     },
-    components: {
-      mavonEditor
+    mounted () {
+      console.log('mounted')
+      axios.get('/api/getArticleCategory')
+        .then((res) => {
+          this.categoryOptions = res.data.msg
+        })
+        .catch((err) => {
+          console.log('err', err)
+        })
+    },
+    watch: {
+      '$route': function () {
+        console.log(1)
+        this.formItem.createTime = new Date()
+      }
     },
     methods: {
       save (value, render) {
@@ -74,16 +83,48 @@
       },
       change (value, render) {
         this.formItem.content = render
-        this.formItem.abstract = value
         console.log('content', this.formItem.content)
       },
+      clearArticle () {
+        let form = this.formItem
+        form.title = ''
+        form.createTime = ''
+        form.content = ''
+        form.category = ''
+        form.abstract = ''
+      },
       submit () {
+        if (!this.formItem.title) {
+          this.$message('文章标题不能为空!')
+          return
+        } else if (!this.formItem.category) {
+          this.$message('文章类别不能为空!')
+          return
+        } else if (!this.formItem.content) {
+          this.$message('文章内容不能为空!')
+          return
+        }
+        // 禁用提交按钮
+        this.submitDisable = true
+        if (!this.formItem.abstract) {
+          let reg = /<[^>]+>/g
+          let abstract = this.formItem.content.replace(reg, '').replace(/(\s)/g, '').replace(/[\\'"/\b\f\n\r\t]/g, '')
+          this.formItem.abstract = abstract.substr(0, 200) + '...'
+        }
         axios.post('/api/saveArticle', this.formItem)
           .then((res) => {
-            console.log('response', res)
+            this.$message({
+              message: '文章发表成功!',
+              type: 'success'
+            })
+            this.submitDisable = false
+            this.clearArticle()
+            this.$router.push({name: 'manage-nav'})
           })
           .catch((err) => {
             console.log('error', err)
+            this.$message.error('服务器出错,请重新提交')
+            this.submitDisable = false
           })
       }
     }

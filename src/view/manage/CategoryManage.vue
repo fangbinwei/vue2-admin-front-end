@@ -4,7 +4,7 @@
       <el-table
         :data="tableData"
         border
-        style="width: 90%">
+        style="width: 95%">
         <el-table-column
           label="类别"
           width="550">
