@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="editor-wrap">
+    <el-col :span="20" :offset="4" class="editor-wrap">
       <div class="editor-header">
         <div class="article-title">
           <el-input v-model.trim="formItem.title" placeholder="文章标题"></el-input>
@@ -24,8 +24,8 @@
             <el-option
               v-for="(item,index) in categoryOptions"
               :key="index"
-              :label="item"
-              :value="item">
+              :label="item._id"
+              :value="item._id">
             </el-option>
           </el-select>
         </div>
@@ -34,7 +34,7 @@
       <div id="editor">
         <mavon-editor @save="save" @change="change" :value="editValue"></mavon-editor>
       </div>
-    </div>
+    </el-col>
   </div>
 </template>
 <script>
@@ -61,29 +61,34 @@
       }
     },
     mounted () {
-      console.log('mounted')
-      axios.get('/api/getArticleCategory')
-        .then((res) => {
-          this.categoryOptions = res.data.msg
-        })
-        .catch((err) => {
-          console.log('err', err)
-        })
+      this.updateCategory()
     },
     watch: {
       '$route': function () {
-        console.log(1)
-        this.formItem.createTime = new Date()
+        this.updateDate()
+        this.updateCategory()
       }
     },
     methods: {
       save (value, render) {
-        console.log('value', value)
-        console.log('render', render)
+//        console.log('value', value)
+//        console.log('render', render)
       },
       change (value, render) {
         this.formItem.content = render
-        console.log('content', this.formItem.content)
+//        console.log('content', this.formItem.content)
+      },
+      updateDate () {
+        this.formItem.createTime = new Date()
+      },
+      updateCategory () {
+        axios.get('/api/getArticleCategory')
+          .then((res) => {
+            this.categoryOptions = res.data.result
+          })
+          .catch((err) => {
+            console.log('err', err)
+          })
       },
       clearArticle () {
         let form = this.formItem
@@ -131,9 +136,8 @@
   }
 </script>
 <style scoped>
- #editor, .editor-header {
-   width: 85%;
-   float: right;
+ #editor {
+   margin-top: 10px;
  }
  .editor-wrap {
    overflow: hidden;
@@ -142,7 +146,7 @@
     height: 400px;
   }
   .editor-header {
-    margin-bottom: 5px;
+    height: 42px;
   }
   .article-title {
     width: 300px;

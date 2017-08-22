@@ -12,7 +12,7 @@
     <el-row class="wrap">
       <el-col :span="3" :offset="0" class="sidebar">
         <el-menu :default-active="defaultActive" @select="selectSidebar">
-          <el-menu-item index="manage-nav"><i class="el-icon-menu"></i>博客管理</el-menu-item>
+          <el-menu-item index="manage"><i class="el-icon-menu"></i>博客管理</el-menu-item>
           <el-menu-item index="write"><i class="el-icon-edit"></i>写新文章</el-menu-item>
           <el-menu-item index="user"><i class="el-icon-information"></i>用户</el-menu-item>
           <el-menu-item index="logout"><i class="el-icon-close"></i>退出</el-menu-item>
@@ -38,9 +38,12 @@
     methods: {
       selectSidebar (index, indexPath) {
         if (index !== 'logout') {
-          this.$router.push({name: index})
+          if (index === 'manage') {
+            this.$router.push({name: index + '-nav'})
+          } else {
+            this.$router.push({name: index})
+          }
         }
-        console.log('route', this.$route.path.split('/')[1])
       }
     }
   }

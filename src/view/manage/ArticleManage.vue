@@ -16,7 +16,7 @@
        :data="articleData"
        border
        height="250"
-       style="width: 95%">
+       style="width: 90%">
        <el-table-column
          label="标题"
          width="250">

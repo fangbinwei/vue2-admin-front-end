@@ -30,7 +30,6 @@
     },
     methods: {
       tabClick (tabPanInstance) {
-        console.log(1)
         this.$router.push({name: 'manage-nav'})
       }
     }
