@@ -10,88 +10,134 @@ import CommentManage from '@/view/manage/CommentManage'
 import DraftManage from '@/view/manage/DraftManage'
 import BlogManage from '@/view/manage/BlogManage'
 import RecycleManage from '@/view/manage/RecycleManage'
+import Login from '@/view/login'
 import Router from 'vue-router'
+import store from '../store'
+// import {getToken} from '../utils/auth'
 
 Vue.use(Router)
 
-export default new Router({
-  routes: [
-    {
-      path: '/',
-      component: AdminHome,
-      children: [
-        {
-          name: 'manage',
-          path: 'manage',
-          component: Manage,
-          children: [{
-            name: 'manage-nav',
-            path: 'manage-nav',
-            components: {
-              articleManage: ArticleManage,
-              categoryManage: CategoryManage,
-              commentManage: CommentManage,
-              blogManage: BlogManage,
-              draftManage: DraftManage,
-              recycleManage: RecycleManage
-            }
-          }]
-          // children: [
-          //   {
-          //     name: 'article-manage',
-          //     path: 'article-manage',
-          //     components: {
-          //       ArticleManage,
-          //       CategoryManage,
-          //       CommentManage
-          //     }
-          //   },
-          //   {
-          //     name: 'category-manage',
-          //     path: 'category-manage',
-          //     component: CategoryManage
-          //   },
-          //   {
-          //     name: 'comment-manage',
-          //     path: 'comment-manage',
-          //     component: CommentManage
-          //   },
-          //   {
-          //     name: 'blog-manage',
-          //     path: 'blog-manage',
-          //     component: BlogManage
-          //   },
-          //   {
-          //     name: 'draft-manage',
-          //     path: 'draft-manage',
-          //     component: DraftManage
-          //   },
-          //   {
-          //     name: 'recycle-manage',
-          //     path: 'recycle-manage',
-          //     component: RecycleManage
-          //   }
-          // ]
-        },
-        {
-          name: 'write',
-          path: '/write',
-          component: Editor
-        },
-        {
-          name: 'user',
-          path: '/user',
-          component: User
-        }
-      ]
+const routes = [
+  {
+    name: 'login',
+    path: '/login',
+    component: Login
+  },
+  {
+    path: '/admin',
+    component: AdminHome,
+    meta: {
+      needToken: true
     },
-    {
-      path: '/404',
-      component: NotFound
-    },
-    {
-      path: '*',
-      component: NotFound
-    }
-  ]
+    children: [
+      {
+        name: 'manage',
+        path: 'manage',
+        component: Manage,
+        meta: {
+          needToken: true
+        },
+        children: [
+          {
+            name: 'article-manage',
+            path: 'article-manage',
+            meta: {
+              needToken: true
+            },
+            component: ArticleManage
+          },
+          {
+            name: 'category-manage',
+            path: 'category-manage',
+            meta: {
+              needToken: true
+            },
+            component: CategoryManage
+          },
+          {
+            name: 'comment-manage',
+            path: 'comment-manage',
+            meta: {
+              needToken: true
+            },
+            component: CommentManage
+          },
+          {
+            name: 'blog-manage',
+            path: 'blog-manage',
+            meta: {
+              needToken: true
+            },
+            component: BlogManage
+          },
+          {
+            name: 'draft-manage',
+            path: 'draft-manage',
+            meta: {
+              needToken: true
+            },
+            component: DraftManage
+          },
+          {
+            name: 'recycle-manage',
+            path: 'recycle-manage',
+            meta: {
+              needToken: true
+            },
+            component: RecycleManage
+          },
+          {
+            name: 'edit-article',
+            path: 'edit-article',
+            meta: {
+              needToken: true
+            },
+            component: Editor
+          }
+        ]
+      },
+      {
+        name: 'write',
+        path: 'write',
+        meta: {
+          needToken: true
+        },
+        component: Editor
+      },
+      {
+        name: 'user',
+        path: 'user',
+        meta: {
+          needToken: true
+        },
+        component: User
+      }
+    ]
+  },
+  {
+    path: '/404',
+    component: NotFound
+  },
+  {
+    path: '*',
+    component: NotFound
+  }
+
+]
+
+const router = new Router({
+  routes: routes
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.needToken) {
+    if (store.getters.token) { // 判断state中的token是否存在
+      next()
+    } else {
+      next({path: '/login'})
+    }
+  } else {
+    next()
+  }
+})
+export default router
