@@ -29,10 +29,10 @@
             </el-option>
           </el-select>
         </div>
-        <el-button type="success" class="commit" @click="submit" :disabled="submitDisable">发表文章</el-button>
+        <el-button type="success" class="commit" @click="submit" :loading="submitLoading">发表文章</el-button>
       </div>
       <div id="editor">
-        <mavon-editor @save="save" @change="change" :value="editValue"></mavon-editor>
+        <mavon-editor @save="save" @change="change" ></mavon-editor>
       </div>
     </el-col>
   </div>
@@ -40,33 +40,25 @@
 <script>
   import { mavonEditor } from 'mavon-editor'
   import 'mavon-editor/dist/css/index.css'
-  import axios from 'axios'
+  import {saveArticleAPI, getArticleCategoryAPI} from '@/api/article'
   export default {
     components: {
       mavonEditor
     },
     data () {
       return {
-        editValue: '',
-        submitDisable: false,
+        submitLoading: false,
         formItem: {
+          id: '',
           title: '',
           createTime: new Date(),
           abstract: '',
           content: '',
+          rawContent: '',
           draft: '',
           category: ''
         },
         categoryOptions: []
-      }
-    },
-    mounted () {
-      this.updateCategory()
-    },
-    watch: {
-      '$route': function () {
-        this.updateDate()
-        this.updateCategory()
       }
     },
     methods: {
@@ -75,32 +67,27 @@
 //        console.log('render', render)
       },
       change (value, render) {
+        this.formItem.rawContent = value
         this.formItem.content = render
 //        console.log('content', this.formItem.content)
       },
       updateDate () {
         this.formItem.createTime = new Date()
       },
-      updateCategory () {
-        axios.get('/api/getArticleCategory')
+      updateCategoryList () {
+        getArticleCategoryAPI()
           .then((res) => {
             this.categoryOptions = res.data.result
           })
-          .catch((err) => {
-            console.log('err', err)
+          .catch(() => {
           })
-      },
-      clearArticle () {
-        let form = this.formItem
-        form.title = ''
-        form.createTime = ''
-        form.content = ''
-        form.category = ''
-        form.abstract = ''
       },
       submit () {
         if (!this.formItem.title) {
           this.$message('文章标题不能为空!')
+          return
+        } else if (!this.formItem.createTime) {
+          this.$message('发布日期不能为空!')
           return
         } else if (!this.formItem.category) {
           this.$message('文章类别不能为空!')
@@ -110,28 +97,42 @@
           return
         }
         // 禁用提交按钮
-        this.submitDisable = true
+        this.submitLoading = true
         if (!this.formItem.abstract) {
           let reg = /<[^>]+>/g
           let abstract = this.formItem.content.replace(reg, '').replace(/(\s)/g, '').replace(/[\\'"/\b\f\n\r\t]/g, '')
           this.formItem.abstract = abstract.substr(0, 200) + '...'
         }
-        axios.post('/api/saveArticle', this.formItem)
+        saveArticleAPI(this.formItem)
           .then((res) => {
             this.$message({
               message: '文章发表成功!',
               type: 'success'
             })
-            this.submitDisable = false
-            this.clearArticle()
-            this.$router.push({name: 'manage-nav'})
+            this.submitLoading = false
+            this.$router.push({name: 'article-manage'})
           })
-          .catch((err) => {
-            console.log('error', err)
-            this.$message.error('服务器出错,请重新提交')
-            this.submitDisable = false
+          // error统一在fetch中处理
+          .catch(() => {
+            this.submitLoading = false
           })
       }
+    },
+    mounted () {
+      this.updateCategoryList()
+      this.updateDate()
+    },
+    beforeRouteEnter (to, from, next) {
+      next((vm) => {
+        vm.updateCategoryList()
+        vm.updateDate()
+      })
+    },
+    beforeRouteLeave (to, from, next) {
+      console.log('to', to)
+      console.log('from', from)
+      console.log('content', this.formItem.rawContent)
+      next()
     }
   }
 </script>
@@ -149,7 +150,7 @@
     height: 42px;
   }
   .article-title {
-    width: 300px;
+    width: 250px;
     display: inline-block;
   }
   .commit {

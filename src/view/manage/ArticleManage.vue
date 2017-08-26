@@ -6,17 +6,18 @@
          v-for="item in categoryData"
          :key="item.value"
          :label="item.label"
-         :value="item.value"
-         :disabled="item.disabled">
+         :value="item.value">
        </el-option>
      </el-select>
    </div>
    <div class="article-list">
      <el-table
+       emptyText=" "
        :data="articleData"
        border
        height="250"
-       style="width: 90%">
+       style="width: 100%"
+       v-loading="loading">
        <el-table-column
          label="标题"
          width="250">
@@ -67,13 +68,14 @@
              @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
            <el-button
              size="small"
-             @click="handleEdit(scope.$index, scope.row)">置顶</el-button>
+             @click="handleStick(scope.$index, scope.row)">置顶</el-button>
            <el-button
              size="small"
-             @click="handleEdit(scope.$index, scope.row)">分类</el-button>
+             @click="handleCategory(scope.$index, scope.row)">分类</el-button>
            <el-button
              size="small"
              type="danger"
+             :loading="delLoading"
              @click="handleDelete(scope.$index, scope.row)">删除</el-button>
          </template>
        </el-table-column>
@@ -91,10 +93,12 @@
  </div>
 </template>
 <script>
-import axios from 'axios'
+import {delArticleAPI, getArticleListAPI} from '@/api/article'
 export default {
   data () {
     return {
+      loading: false,
+      delLoading: false,
       currentPage: 1,
       pageSize: 5,
       articleData: [],
@@ -106,9 +110,43 @@ export default {
   methods: {
     handleEdit (index, row) {
       console.log(index, row)
+      this.$confirm('要编辑这篇文章?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'info'
+      })
+        .then(() => {
+          this.$router.push({name: 'edit-article'})
+        })
+        .catch(() => {
+          this.$message({
+            type: 'success',
+            message: '已取消删除'
+          })
+        })
     },
     handleDelete (index, row) {
-      console.log(index, row)
+      this.$confirm('是否删除该文章?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.delLoading = true
+        let articleId = row._id
+        delArticleAPI({id: articleId})
+          .then((res) => {
+            this.delLoading = false
+            this.updateArticleList()
+          })
+          .catch(() => {
+            this.delLoading = false
+          })
+      }).catch(() => {
+        this.$message({
+          type: 'success',
+          message: '已取消删除'
+        })
+      })
     },
     // 每页显示x条
     handleSizeChange (size) {
@@ -122,26 +160,31 @@ export default {
       this.updateArticleList()
     },
     updateArticleList () {
+      this.loading = true
       let reqParams = {
         page: this.currentPage,
         pageSize: this.pageSize
       }
-      axios.get('/api/getArticleList', {params: reqParams})
+      getArticleListAPI(reqParams)
         .then((res) => {
           let queryResult = res.data.result
           this.articleData = queryResult.list
           this.totalArticle = queryResult.total
+          this.loading = false
         })
-        .catch((err) => {
-          console.log('err', err)
+        .catch(() => {
+          this.loading = false
         })
     }
   },
   mounted () {
     this.updateArticleList()
   },
-  watch: {
-    '$route': 'updateArticleList'
+  beforeRouteEnter (to, from, next) {
+//    console.log('this', this) //  this undefined
+    next((vm) => {
+      vm.updateArticleList()
+    })
   }
 }
 </script>

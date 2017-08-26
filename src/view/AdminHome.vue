@@ -15,12 +15,10 @@
           <el-menu-item index="manage"><i class="el-icon-menu"></i>博客管理</el-menu-item>
           <el-menu-item index="write"><i class="el-icon-edit"></i>写新文章</el-menu-item>
           <el-menu-item index="user"><i class="el-icon-information"></i>用户</el-menu-item>
-          <el-menu-item index="logout"><i class="el-icon-close"></i>退出</el-menu-item>
+          <el-menu-item index="logout" @click="logout"><i class="el-icon-close"></i>退出</el-menu-item>
         </el-menu>
       </el-col>
-      <keep-alive>
-        <router-view></router-view>
-      </keep-alive>
+      <router-view></router-view>
     </el-row>
   </div>
 </template>
@@ -39,11 +37,21 @@
       selectSidebar (index, indexPath) {
         if (index !== 'logout') {
           if (index === 'manage') {
-            this.$router.push({name: index + '-nav'})
+            this.$router.push({name: 'article-manage'})
           } else {
             this.$router.push({name: index})
           }
         }
+      },
+      logout () {
+        this.$store.dispatch('FedLogoutAction')
+          .then(() => {
+            this.$router.replace({name: 'login'})
+            this.$message({
+              type: 'success',
+              message: '成功退出!'
+            })
+          })
       }
     }
   }
