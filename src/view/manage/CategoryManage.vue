@@ -5,7 +5,7 @@
         :data="categoryData"
         emptyText=" "
         border
-        height="250"
+        height="300"
         style="width: 100%"
         v-loading="loading">
         <el-table-column

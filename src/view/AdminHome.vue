@@ -1,46 +1,101 @@
 <template>
-  <div class="container">
-    <header>
-      <el-row>
-        <el-col :span="4">
-          <h2 class="title">
-            Sleep
-          </h2>
-        </el-col>
-      </el-row>
-    </header>
-    <el-row class="wrap">
-      <el-col :span="3" :offset="0" class="sidebar">
-        <el-menu :default-active="defaultActive" @select="selectSidebar">
-          <el-menu-item index="manage"><i class="el-icon-menu"></i>博客管理</el-menu-item>
-          <el-menu-item index="write"><i class="el-icon-edit"></i>写新文章</el-menu-item>
-          <el-menu-item index="user"><i class="el-icon-information"></i>用户</el-menu-item>
-          <el-menu-item index="logout" @click="logout"><i class="el-icon-close"></i>退出</el-menu-item>
+  <div>
+    <div class="container">
+      <el-row class="wrap">
+        <el-menu :default-active="defaultActive"
+                 @select="selectSidebar"
+                 theme="dark"
+                 :collapse="sidebarCollapse"
+                 class="sidebar-menu">
+          <el-menu-item index="manage">
+            <i class="el-icon-menu"></i>
+            <span slot="title">博客管理</span>
+          </el-menu-item>
+          <el-menu-item index="new-article">
+            <i class="el-icon-edit"></i>
+            <span slot="title">新文章</span>
+          </el-menu-item>
+          <el-menu-item index="user">
+            <i class="el-icon-information"></i>
+            <span slot="title">用户</span>
+          </el-menu-item>
+          <el-menu-item index="logout" @click="logout">
+            <i class="el-icon-close"></i>
+            <span slot="title">退出</span>
+          </el-menu-item>
         </el-menu>
-      </el-col>
-      <router-view></router-view>
-    </el-row>
+        <div class="main">
+          <header class="main-header">
+            <div class="sidebar-toggle" @click="toggleSidebar" :class="{'sidebar-active': sidebarCollapse}">
+              <i class="el-icon-caret-left"></i>
+            </div>
+            <el-breadcrumb separator="/" class="breadcrumb">
+              <el-breadcrumb-item class="breadcrumb-item"
+                                  v-for="(item,index) in levelList"
+                                  :key="index" :to="{path: item.path}">{{item.name}}</el-breadcrumb-item>
+            </el-breadcrumb>
+            <span class="title">Sleepwalker</span>
+          </header>
+          <div class="main-container">
+            <router-view></router-view>
+            <div class="admin-content" v-if="adminContent">
+              <img :src="adminPic" alt="首页展示图片" class="admin-pic">
+            </div>
+          </div>
+        </div>
+      </el-row>
+    </div>
   </div>
 </template>
 <script>
+  import $ from 'jquery'
   export default {
     data () {
       return {
+        sidebarCollapse: false,
+        levelList: null,
+        adminPic: require('../../static/img/bench_gif.gif') // static$ alias
       }
     },
     computed: {
       defaultActive () {
-        return this.$route.path.split('/')[1]
+        return this.$route.path.split('/')[2]
+      },
+      adminContent () {
+        return this.$route.name === 'admin'
       }
     },
     methods: {
+//      showAdminContent () {
+//        if (this.$route.name === 'admin') {
+//          this.adminCotent = true
+//        }
+//      },
+      toggleSidebar () {
+        this.sidebarCollapse = !this.sidebarCollapse
+        if (this.sidebarCollapse) {
+          $('.main').stop().animate(
+            {
+              'margin-left': 64
+            },
+            {
+              duration: '100',
+              easing: 'swing'
+            })
+        } else {
+          $('.main').stop().animate(
+            {
+              'margin-left': 150
+            },
+            {
+              duration: 'fast',
+              easing: 'swing'
+            })
+        }
+      },
       selectSidebar (index, indexPath) {
         if (index !== 'logout') {
-          if (index === 'manage') {
-            this.$router.push({name: 'article-manage'})
-          } else {
-            this.$router.push({name: index})
-          }
+          this.$router.push({name: index})
         }
       },
       logout () {
@@ -52,44 +107,109 @@
               message: '成功退出!'
             })
           })
+      },
+      getBreadCurmb () {
+        let matched = this.$route.matched.filter((item) => {
+          return item.name
+          // TODO switch 将英文name转为中文?
+        })
+        console.log('match', matched)
+        this.levelList = matched
       }
+    },
+    watch: {
+      $route () {
+        this.getBreadCurmb()
+      }
+    },
+    mounted () {
+      this.getBreadCurmb()
     }
   }
 </script>
 
 <style>
-  * {
-    /*background-color: rgba(0,0,0,0.1);*/
+  html {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
   }
-  header {
-    background-color: rgb(32, 160, 255);
-    height: 80px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1501;
+  * {
+    box-sizing: inherit;
   }
   .container {
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 15px;
-    padding-right: 15px;
+    /*margin-left: auto;*/
+    /*margin-right: auto;*/
+    /*padding-left: 15px;*/
+    /*padding-right: 15px;*/
+  }
+  .el-icon-caret-right {
+  }
+  .sidebar-menu {
+    position: fixed;
+    bottom: 0;
+    top: 0;
+    z-index: 1501;
+    overflow: hidden;
+    border-radius: 5px;
+  }
+  .sidebar-menu:not(.el-menu--collapse) {
+    width: 150px;
+  }
+
+  .main {
+    margin-left: 150px;
+  }
+  .main-header {
+    background-color: #435175;
+    height: 50px;
+    font-size: 1.5rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+  }
+  .sidebar-toggle {
+    cursor: pointer;
+    transition: all 1s;
+  }
+  .sidebar-active {
+    transform: rotateY(-180deg);
+
+  }
+  .breadcrumb {
+    padding: 0 10px;
+  }
+  .breadcrumb-item {
+    font-size: 1.1rem;
+  }
+  .breadcrumb-item>span {
+    color: #fff;
   }
   .title {
     padding: 0 15px;
+    position: absolute;
+    right: 0;
+    color: #fff;
   }
-  .sidebar {
-    position: fixed;
-    bottom: 0;
-    top: 100px;
-    z-index: 1501;
+  .main-container {
+    overflow: hidden;
+    padding: 20px 50px;
+    border-radius: 5px;
+    border: 1px solid #435175;
+    min-height: 100vh;
+    margin-bottom: -50px;
   }
-  .wrap {
-    margin-top: 100px;
+  .admin-content {
+    margin: -20px -50px;
+    padding-top: 200px;
+    min-height: 100vh;
+    background-color: #435175;
   }
-  .el-menu {
-    height: 100%;
+  .admin-pic {
+    display: block;
+    width: 350px;
+    margin: 0 auto;
   }
 
 </style>

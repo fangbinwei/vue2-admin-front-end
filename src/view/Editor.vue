@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-col :span="20" :offset="4" class="editor-wrap">
+    <el-col :span="24" class="editor-wrap">
       <div class="editor-header">
         <div class="article-title">
           <el-input v-model.trim="formItem.title" placeholder="文章标题"></el-input>
@@ -129,9 +129,10 @@
       })
     },
     beforeRouteLeave (to, from, next) {
-      console.log('to', to)
-      console.log('from', from)
-      console.log('content', this.formItem.rawContent)
+      // TODO 离开前保存草稿 自动保存草稿
+//      console.log('to', to)
+//      console.log('from', from)
+//      console.log('content', this.formItem.rawContent)
       next()
     }
   }
@@ -147,7 +148,6 @@
     height: 400px;
   }
   .editor-header {
-    height: 42px;
   }
   .article-title {
     width: 250px;

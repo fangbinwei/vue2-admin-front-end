@@ -1,5 +1,5 @@
 <template>
-  <el-col :span="20" :offset="4">user</el-col>
+  <div>user</div>
 </template>
 
 <script>

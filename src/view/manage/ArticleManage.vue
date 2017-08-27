@@ -15,7 +15,7 @@
        emptyText=" "
        :data="articleData"
        border
-       height="250"
+       height="300"
        style="width: 100%"
        v-loading="loading">
        <el-table-column
@@ -109,7 +109,7 @@ export default {
   },
   methods: {
     handleEdit (index, row) {
-      console.log(index, row)
+//      console.log(index, row)
       this.$confirm('要编辑这篇文章?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',

@@ -71,7 +71,7 @@
             this.$store.dispatch('LoginAction', loginForm)
               .then(() => {
                 this.submitLoading = false
-                this.$router.push({name: 'manage'})
+                this.$router.push({name: 'admin'})
                 this.$message({
                   message: '登入成功',
                   type: 'success'
