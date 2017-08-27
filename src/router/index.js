@@ -25,6 +25,7 @@ const routes = [
   },
   {
     path: '/admin',
+    name: 'admin',
     component: AdminHome,
     meta: {
       needToken: true
@@ -97,8 +98,8 @@ const routes = [
         ]
       },
       {
-        name: 'write',
-        path: 'write',
+        name: 'new-article',
+        path: 'new-article',
         meta: {
           needToken: true
         },
@@ -132,6 +133,7 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   if (to.meta.needToken) {
     if (store.getters.token) { // 判断state中的token是否存在
+      // console.log('beforeEach getters.token')
       next()
     } else {
       next({path: '/login'})
