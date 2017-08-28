@@ -12,12 +12,11 @@
    </div>
    <div class="article-list">
      <el-table
-       emptyText=" "
        :data="articleData"
        border
        height="300"
        style="width: 100%"
-       v-loading="loading">
+       v-loading="tableLoading">
        <el-table-column
          label="标题"
          width="250">
@@ -65,10 +64,10 @@
          <template scope="scope">
            <el-button
              size="small"
-             @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+             @click="handleStick(scope.$index, scope.row)">置顶</el-button>
            <el-button
              size="small"
-             @click="handleStick(scope.$index, scope.row)">置顶</el-button>
+             @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
            <el-button
              size="small"
              @click="handleCategory(scope.$index, scope.row)">分类</el-button>
@@ -90,14 +89,28 @@
      layout="total, prev, pager, next, sizes"
      :total="totalArticle">
    </el-pagination>
+   <my-dialog :is-show="showCateDialog" @on-close="closeDialog">
+     <el-input v-model.trim="cateInput"></el-input>
+     <div class="buttons">
+       <el-button @click="closeDialog">取消</el-button>
+       <el-button v-loading="cateLoading" @click="updateCategory">确定</el-button>
+     </div>
+   </my-dialog>
  </div>
 </template>
 <script>
-import {delArticleAPI, getArticleListAPI} from '@/api/article'
+import MyDialog from '@/components/dialog'
+import {delArticleAPI, getArticleListAPI, updateCategoryByIdAPI} from '@/api/article'
 export default {
   data () {
     return {
-      loading: false,
+      // 用于更改文章分类
+      cateLoading: false,
+      cateInput: '',
+      showCateDialog: false,
+      categoryBefore: '',
+      // loading
+      tableLoading: false,
       delLoading: false,
       currentPage: 1,
       pageSize: 5,
@@ -107,23 +120,64 @@ export default {
       totalArticle: 0
     }
   },
+  components: {
+    MyDialog
+  },
   methods: {
     handleEdit (index, row) {
-//      console.log(index, row)
       this.$confirm('要编辑这篇文章?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'info'
       })
         .then(() => {
-          this.$router.push({name: 'edit-article'})
+          this.$router.push({name: 'edit-article', query: {id: row._id}})
         })
         .catch(() => {
           this.$message({
             type: 'success',
-            message: '已取消删除'
+            message: '已取消'
           })
         })
+    },
+    // TODO closeDialog 和 updateCategory 改成handleDelete的形式 用promise .then()
+    closeDialog () {
+      this.showCateDialog = false
+      this.$message({
+        type: 'success',
+        message: '已取消'
+      })
+    },
+    handleCategory (index, row) {
+      console.log('row', row)
+      this.categoryBefore = row.category
+      this.cateInput = row.category
+      this.id = row._id
+      this.showCateDialog = true
+    },
+    updateCategory () {
+      if (this.categoryBefore !== this.cateInput) {
+        this.cateLoading = true
+        updateCategoryByIdAPI({id: this.id, categoryAfter: this.cateInput})
+          .then((res) => {
+            this.$message({
+              type: 'success',
+              message: res.data.msg
+            })
+            this.cateLoading = false
+            this.showCateDialog = false
+            this.updateArticleList()
+          })
+          .catch(() => {
+            this.cateLoading = false
+            this.showCateDialog = false
+          })
+      } else {
+        this.$message({
+          type: 'warning',
+          message: '类别并未修改'
+        })
+      }
     },
     handleDelete (index, row) {
       this.$confirm('是否删除该文章?', '提示', {
@@ -144,7 +198,7 @@ export default {
       }).catch(() => {
         this.$message({
           type: 'success',
-          message: '已取消删除'
+          message: '已取消'
         })
       })
     },
@@ -160,7 +214,7 @@ export default {
       this.updateArticleList()
     },
     updateArticleList () {
-      this.loading = true
+      this.tableLoading = true
       let reqParams = {
         page: this.currentPage,
         pageSize: this.pageSize
@@ -170,10 +224,10 @@ export default {
           let queryResult = res.data.result
           this.articleData = queryResult.list
           this.totalArticle = queryResult.total
-          this.loading = false
+          this.tableLoading = false
         })
         .catch(() => {
-          this.loading = false
+          this.tableLoading = false
         })
     }
   },
@@ -195,5 +249,9 @@ export default {
   .el-pagination {
     text-align: center;
     margin-top: 40px;
+  }
+  .buttons {
+    text-align: center;
+    margin-top: 20px;
   }
 </style>

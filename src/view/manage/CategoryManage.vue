@@ -3,7 +3,6 @@
     <div class="category-list">
       <el-table
         :data="categoryData"
-        emptyText=" "
         border
         height="300"
         style="width: 100%"
@@ -35,10 +34,10 @@
       </el-table>
     </div>
     <my-dialog :is-show="showDialog" @on-close="closeDialog">
-      <el-input v-model="input"></el-input>
+      <el-input v-model.trim="input"></el-input>
       <div class="buttons">
-        <el-button v-loading="updateLoading" @click="updateCategory">确定</el-button>
         <el-button @click="closeDialog">取消</el-button>
+        <el-button v-loading="updateLoading" @click="updateCategory">确定</el-button>
       </div>
     </my-dialog>
   </div>
@@ -63,15 +62,17 @@
     },
     methods: {
       handleEdit (index, row) {
+        // 后端数据库聚合使用category作为_id的值
         this.categoryBefore = row._id
         this.input = row._id
         this.showDialog = true
       },
       closeDialog () {
         this.showDialog = false
-      },
-      handleDelete (index, row) {
-        console.log(index, row)
+        this.$message({
+          type: 'success',
+          message: '已取消'
+        })
       },
       updateCategoryList () {
         this.loading = true
@@ -85,8 +86,6 @@
           })
       },
       updateCategory () {
-        console.log('before', this.categoryBefore)
-        console.log('after', this.input)
         if (this.categoryBefore !== this.input) {
           this.updateLoading = true
           updateCategoryAPI({
@@ -94,6 +93,10 @@
             categoryUpdate: this.input
           })
             .then((res) => {
+              this.$message({
+                type: 'success',
+                message: res.data.msg
+              })
               this.updateCategoryList()
               this.updateLoading = false
               this.showDialog = false
@@ -102,6 +105,11 @@
               this.updateLoading = false
               this.showDialog = false
             })
+        } else {
+          this.$message({
+            type: 'warning',
+            message: '类别并未修改'
+          })
         }
       }
     },

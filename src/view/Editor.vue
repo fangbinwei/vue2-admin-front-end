@@ -29,10 +29,13 @@
             </el-option>
           </el-select>
         </div>
-        <el-button type="success" class="commit" @click="submit" :loading="submitLoading">发表文章</el-button>
+        <el-button type="success"
+                   class="commit"
+                   @click="submit"
+                   :loading="submitLoading">{{ buttonText }}</el-button>
       </div>
       <div id="editor">
-        <mavon-editor @save="save" @change="change" ></mavon-editor>
+        <mavon-editor @save="save" @change="change" :value="articleInitValue"></mavon-editor>
       </div>
     </el-col>
   </div>
@@ -40,18 +43,20 @@
 <script>
   import { mavonEditor } from 'mavon-editor'
   import 'mavon-editor/dist/css/index.css'
-  import {saveArticleAPI, getArticleCategoryAPI} from '@/api/article'
+  import {saveArticleAPI, getArticleCategoryAPI, queryArticleAPI} from '@/api/article'
   export default {
     components: {
       mavonEditor
     },
     data () {
       return {
+        id: '',
+        buttonText: '发表文章',
+        articleInitValue: '',
         submitLoading: false,
         formItem: {
-          id: '',
           title: '',
-          createTime: new Date(),
+          createTime: Date.now(),
           abstract: '',
           content: '',
           rawContent: '',
@@ -103,10 +108,15 @@
           let abstract = this.formItem.content.replace(reg, '').replace(/(\s)/g, '').replace(/[\\'"/\b\f\n\r\t]/g, '')
           this.formItem.abstract = abstract.substr(0, 200) + '...'
         }
+        // 若id存在,说明是修改文章
+        if (this.id) {
+          Object.assign(this.formItem, {id: this.id})
+          console.log('this.form', this.formItem)
+        }
         saveArticleAPI(this.formItem)
           .then((res) => {
             this.$message({
-              message: '文章发表成功!',
+              message: this.id ? '文章修改成功!' : '文章发表成功!',
               type: 'success'
             })
             this.submitLoading = false
@@ -118,14 +128,29 @@
           })
       }
     },
-    mounted () {
-      this.updateCategoryList()
-      this.updateDate()
-    },
+//    mounted () {
+//      this.updateCategoryList()
+//      this.updateDate()
+//    },
     beforeRouteEnter (to, from, next) {
-      next((vm) => {
-        vm.updateCategoryList()
-        vm.updateDate()
+      console.log('beforeEnter')
+      next((vue) => {
+        console.log('beforeEnter next')
+        // TODO 数据获取期间显示进度条
+        vue.updateCategoryList()
+        vue.updateDate()
+        let id = vue.$route.query.id
+        if (id) {
+          vue.id = id
+          vue.buttonText = '修改文章'
+          queryArticleAPI({id: id})
+            .then((res) => {
+              vue.formItem = res.data.result
+              vue.articleInitValue = vue.formItem.rawContent
+            })
+            .catch(() => {
+            })
+        }
       })
     },
     beforeRouteLeave (to, from, next) {

@@ -113,7 +113,6 @@
           return item.name
           // TODO switch 将英文name转为中文?
         })
-        console.log('match', matched)
         this.levelList = matched
       }
     },
@@ -173,6 +172,9 @@
     cursor: pointer;
     transition: all 1s;
   }
+  .sidebar-toggle i {
+    color: #fff;
+  }
   .sidebar-active {
     transform: rotateY(-180deg);
 
@@ -194,18 +196,31 @@
   }
   .main-container {
     overflow: hidden;
-    padding: 20px 50px;
+    padding: 70px 50px 0;
     border-radius: 5px;
     border: 1px solid #435175;
     min-height: 100vh;
-    margin-bottom: -50px;
+    margin-top: -50px;
   }
   .admin-content {
-    margin: -20px -50px;
-    padding-top: 200px;
+    padding-top: 300px;
     min-height: 100vh;
     background-color: #435175;
+    margin: -72px -50px 0;
   }
+  /*.main-container {*/
+    /*overflow: hidden;*/
+    /*padding: 50px 50px 0;*/
+    /*border-radius: 5px;*/
+    /*border: 1px solid #435175;*/
+    /*min-height: 100vh;*/
+  /*}*/
+  /*.admin-content {*/
+    /*margin: -50px -50px;*/
+    /*padding-top: 150px;*/
+    /*min-height: 100vh;*/
+    /*background-color: #435175;*/
+  /*}*/
   .admin-pic {
     display: block;
     width: 350px;
