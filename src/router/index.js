@@ -131,6 +131,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
+  console.log('beforeEach', to)
   if (to.meta.needToken) {
     if (store.getters.token) { // 判断state中的token是否存在
       // console.log('beforeEach getters.token')
