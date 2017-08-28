@@ -6,6 +6,13 @@ export function saveArticleAPI (form) {
     data: form
   })
 }
+export function queryArticleAPI (articleIdObj) {
+  return fetch({
+    url: '/api/queryArticle',
+    method: 'post',
+    data: articleIdObj
+  })
+}
 export function getArticleCategoryAPI () {
   return fetch({
     url: '/api/getArticleCategory',
@@ -26,10 +33,17 @@ export function getArticleListAPI (reqParams) {
     params: reqParams
   })
 }
-export function updateCategoryAPI (cateInform) {
+export function updateCategoryAPI (cateObj) {
   return fetch({
     url: '/api/updateCategory',
     method: 'post',
-    data: cateInform
+    data: cateObj
+  })
+}
+export function updateCategoryByIdAPI (cateObj) {
+  return fetch({
+    url: '/api/updateCategoryById',
+    method: 'post',
+    data: cateObj
   })
 }
