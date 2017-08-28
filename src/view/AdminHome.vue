@@ -136,6 +136,10 @@
   * {
     box-sizing: inherit;
   }
+  #nprogress {
+    position: relative;
+    z-index: 9999999;
+  }
   .container {
     /*margin-left: auto;*/
     /*margin-right: auto;*/
