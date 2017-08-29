@@ -31,8 +31,12 @@
         </div>
         <el-button type="success"
                    class="commit"
-                   @click="submit"
+                   @click="submit(false)"
                    :loading="submitLoading">{{ buttonText }}</el-button>
+        <el-button type="danger"
+                   class="commit"
+                   @click="submit(true)"
+                   :loading="submitDraftLoading">保存草稿</el-button>
       </div>
       <div id="editor">
         <mavon-editor @save="save" @change="change" :value="articleInitValue"></mavon-editor>
@@ -54,16 +58,18 @@
         buttonText: '发表文章',
         articleInitValue: '',
         submitLoading: false,
+        submitDraftLoading: false,
         formItem: {
           title: '',
           createTime: Date.now(),
           abstract: '',
           content: '',
           rawContent: '',
-          draft: '',
+          draft: false,
           category: ''
         },
-        categoryOptions: []
+        categoryOptions: [],
+        submitted: false
       }
     },
     methods: {
@@ -87,7 +93,41 @@
           .catch(() => {
           })
       },
-      submit () {
+      saveArticle (formItem) {
+        saveArticleAPI(formItem)
+          .then((res) => {
+            this.submitLoading = false
+            // 设置submitted 让routerleave 知道文章已经提交,不需要保存草稿
+            this.submitted = true
+            this.$message({
+              message: '文章发表成功!',
+              type: 'success'
+            })
+            this.$router.push({name: 'article-manage'})
+          })
+          // error统一在fetch中处理
+          .catch(() => {
+            this.submitLoading = false
+          })
+      },
+      saveDraft (formItem) {
+        saveArticleAPI(formItem)
+          .then((res) => {
+            this.submitDraftLoading = false
+            // 设置submitted 让routerleave 知道草稿已经提交,不需要保存草稿
+            this.submitted = true
+            this.$message({
+              message: '草稿保存成功!',
+              type: 'success'
+            })
+            this.$router.push({name: 'draft-manage'})
+          })
+          // error统一在fetch中处理
+          .catch(() => {
+            this.submitDraftLoading = false
+          })
+      },
+      submit (draftFlag) {
         if (!this.formItem.title) {
           this.$message('文章标题不能为空!')
           return
@@ -101,8 +141,6 @@
           this.$message('文章内容不能为空!')
           return
         }
-        // 禁用提交按钮
-        this.submitLoading = true
         if (!this.formItem.abstract) {
           let reg = /<[^>]+>/g
           let abstract = this.formItem.content.replace(reg, '').replace(/(\s)/g, '').replace(/[\\'"/\b\f\n\r\t]/g, '')
@@ -111,38 +149,30 @@
         // 若id存在,说明是修改文章
         if (this.id) {
           Object.assign(this.formItem, {id: this.id})
-          console.log('this.form', this.formItem)
         }
-        saveArticleAPI(this.formItem)
-          .then((res) => {
-            this.$message({
-              message: this.id ? '文章修改成功!' : '文章发表成功!',
-              type: 'success'
-            })
-            this.submitLoading = false
-            this.$router.push({name: 'article-manage'})
-          })
-          // error统一在fetch中处理
-          .catch(() => {
-            this.submitLoading = false
-          })
+        if (draftFlag) {
+          // 保存草稿
+          this.formItem.draft = true
+          this.submitDraftLoading = true
+          this.saveDraft(this.formItem)
+        } else {
+          // 发表文章
+          this.formItem.draft = false
+          this.submitLoading = true
+          this.saveArticle(this.formItem)
+        }
       }
     },
-//    mounted () {
-//      this.updateCategoryList()
-//      this.updateDate()
-//    },
     beforeRouteEnter (to, from, next) {
-      console.log('beforeEnter')
       next((vue) => {
-        console.log('beforeEnter next')
         // TODO 数据获取期间显示进度条
         vue.updateCategoryList()
         vue.updateDate()
+//        vue.submitted = false  如果router-view被keep-alive包括 则需要这句
+        // 判断是否是编辑文章
         let id = vue.$route.query.id
         if (id) {
           vue.id = id
-          vue.buttonText = '修改文章'
           queryArticleAPI({id: id})
             .then((res) => {
               vue.formItem = res.data.result
@@ -155,11 +185,37 @@
     },
     beforeRouteLeave (to, from, next) {
       // TODO 离开前保存草稿 自动保存草稿
-//      console.log('to', to)
-//      console.log('from', from)
-//      console.log('content', this.formItem.rawContent)
-      next()
+      // 已经提交,不用保存草稿
+      if (this.submitted) {
+        next()
+      } else {
+        switch (!!this.formItem.content) {
+          case true:
+            this.$confirm('离开前是否需要保存草稿?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              closeOnClickModal: false,
+              closeOnPressEscape: false,
+              type: 'warning'
+            })
+              .then(() => {
+                next(false)
+                this.formItem.draft = true
+                this.submit(true)
+              })
+              .catch(() => {
+                next()
+              })
+            break
+          case false:
+            next()
+        }
+      }
     }
+//    mounted () {
+//      this.updateCategoryList()
+//      this.updateDate()
+//    }
   }
 </script>
 <style scoped>
@@ -180,11 +236,15 @@
   }
   .commit {
     float: right;
+    margin-left: 20px;
   }
   .abstract,.article-category,.date {
     display: inline-block;
   }
+  .article-category {
+    width: 150px;
+  }
   .abstract {
-    width: 300px;
+    width: 250px;
   }
 </style>
