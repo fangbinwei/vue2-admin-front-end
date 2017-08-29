@@ -7,7 +7,6 @@ import User from '@/view/User'
 import ArticleManage from '@/view/manage/ArticleManage'
 import CategoryManage from '@/view/manage/CategoryManage'
 import CommentManage from '@/view/manage/CommentManage'
-import DraftManage from '@/view/manage/DraftManage'
 import BlogManage from '@/view/manage/BlogManage'
 import RecycleManage from '@/view/manage/RecycleManage'
 import Login from '@/view/login'
@@ -80,7 +79,7 @@ const routes = [
             meta: {
               needToken: true
             },
-            component: DraftManage
+            component: ArticleManage
           },
           {
             name: 'recycle-manage',
@@ -133,11 +132,10 @@ const router = new Router({
   routes: routes
 })
 
-NProgress.inc(0.2)
+NProgress.inc()
 NProgress.configure({ easing: 'ease', speed: 500, showSpinner: false })
 
 router.beforeEach((to, from, next) => {
-  console.log('beforeEach', to)
   NProgress.start()
   if (to.meta.needToken) {
     if (store.getters.token) { // 判断state中的token是否存在
@@ -150,7 +148,7 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
-router.afterEach((to, from, next) => {
+router.afterEach((to, from) => {
   NProgress.done()
 })
 
