@@ -140,7 +140,7 @@ export default {
           })
         })
     },
-    // TODO closeDialog 和 updateCategory 改成handleDelete的形式 用promise .then()
+    // TODO closeDialog 和 updateCategory 改成handleDelete的形式 用promise .then(), 参考elementUI 中$prompt
     closeDialog () {
       this.showCateDialog = false
       this.$message({
@@ -214,10 +214,19 @@ export default {
       this.updateArticleList()
     },
     updateArticleList () {
+      let draft
+      switch (this.$route.name) {
+        case 'article-manage':
+          draft = 'no'
+          break
+        case 'draft-manage':
+          draft = 'yes'
+      }
       this.tableLoading = true
       let reqParams = {
         page: this.currentPage,
-        pageSize: this.pageSize
+        pageSize: this.pageSize,
+        draft: draft
       }
       getArticleListAPI(reqParams)
         .then((res) => {
@@ -227,15 +236,14 @@ export default {
           this.tableLoading = false
         })
         .catch(() => {
-          this.tableLoading = false
+//          this.tableLoading = false
         })
     }
   },
-  mounted () {
-    this.updateArticleList()
-  },
+//  mounted () {
+//    this.updateArticleList()
+//  },
   beforeRouteEnter (to, from, next) {
-//    console.log('this', this) //  this undefined
     next((vm) => {
       vm.updateArticleList()
     })
