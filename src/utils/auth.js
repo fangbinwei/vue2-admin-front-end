@@ -2,7 +2,7 @@ import Cookies from 'js-cookie'
 
 const tokenKey = 'User-Token'
 export function getToken () {
-  console.log('getToken')
+  // console.log('getToken')
   return Cookies.get(tokenKey)
 }
 
