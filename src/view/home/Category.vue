@@ -1,0 +1,72 @@
+<template>
+  <div>
+    <div class="container">
+      <div class="row justify-content-md-start justify-content-center mx-0">
+        <h3>Tag</h3>
+      </div>
+      <div class="row justify-content-center">
+        <h4>目前共计<span>{{categoryList.length}}</span>个分类</h4>
+      </div>
+      <div class="row justify-content-between mx-0">
+        <div class="col-md-3 col-11 category">
+          <ul class="nav flex-column">
+            <li class="nav-item" v-for="(item,index) in categoryList">
+              <router-link
+                class="nav-link"
+                :to="{name: 'categoryDetail', params: {category: item._id}}">{{item._id}} ({{item.count}})</router-link>
+            </li>
+          </ul>
+        </div>
+        <div class="col-8 category-list px-0">
+          <keep-alive>
+            <router-view></router-view>
+          </keep-alive>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  import {getArticleCategoryAPI} from '@/api/article'
+  export default {
+    data () {
+      return {
+        categoryList: []
+      }
+    },
+    methods: {
+      updateCategoryList () {
+        getArticleCategoryAPI()
+          .then((res) => {
+            this.categoryList = res.data.result
+          })
+          .catch(() => {
+          })
+      }
+    },
+    beforeRouteEnter (to, from, next) {
+      next((vm) => {
+        vm.updateCategoryList()
+      })
+    }
+  }
+
+</script>
+
+<style scoped>
+  .category {
+    padding-right: 0;
+    padding-left: 0;
+  }
+  .category>ul {
+    border: 2px solid black;
+  }
+  .category a {
+    color: #000;
+  }
+  .category-list {
+    border-left: 4px solid #eee;
+  }
+
+</style>
