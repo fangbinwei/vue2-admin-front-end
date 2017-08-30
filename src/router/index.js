@@ -1,16 +1,26 @@
 import Vue from 'vue'
 import NotFound from '@/view/404'
-import AdminHome from '@/view/AdminHome'
-import Manage from '@/view/Manage'
-import Editor from '@/view/Editor'
-import User from '@/view/User'
-import ArticleManage from '@/view/manage/ArticleManage'
-import CategoryManage from '@/view/manage/CategoryManage'
-import CommentManage from '@/view/manage/CommentManage'
-import BlogManage from '@/view/manage/BlogManage'
-import RecycleManage from '@/view/manage/RecycleManage'
-import Login from '@/view/login'
+// 后台管理
+import AdminHome from '@/view/admin/AdminHome'
+import Manage from '@/view/admin/Manage'
+import Editor from '@/view/admin/Editor'
+import User from '@/view/admin/User'
+import ArticleManage from '@/view/admin/manage/ArticleManage'
+import CategoryManage from '@/view/admin/manage/CategoryManage'
+import CommentManage from '@/view/admin/manage/CommentManage'
+import BlogManage from '@/view/admin/manage/BlogManage'
+import DraftManage from '@/view/admin/manage/DraftManage'
+import RecycleManage from '@/view/admin/manage/RecycleManage'
+import Login from '@/view/admin/login'
 
+// blog页面
+import Layout from '@/view/home/Layout'
+import Home from '@/view/home/Home'
+import Archive from '@/view/home/Archive'
+import Category from '@/view/home/Category'
+import CategoryDetail from '@/view/home/CategoryDetail'
+import About from '@/view/home/About'
+//
 import Router from 'vue-router'
 import store from '../store'
 // import {getToken} from '../utils/auth'
@@ -20,6 +30,41 @@ import 'nprogress/nprogress.css'
 Vue.use(Router)
 
 const routes = [
+  {
+    name: 'layout',
+    path: '/',
+    redirect: '/home',
+    component: Layout,
+    children: [
+      {
+        name: 'home',
+        path: 'home',
+        component: Home
+      },
+      {
+        name: 'archive',
+        path: 'archive',
+        component: Archive
+      },
+      {
+        name: 'category',
+        path: 'category',
+        component: Category,
+        children: [
+          {
+            name: 'categoryDetail',
+            path: ':category',
+            component: CategoryDetail
+          }
+        ]
+      },
+      {
+        name: 'about',
+        path: 'about',
+        component: About
+      }
+    ]
+  },
   {
     name: 'login',
     path: '/login',
@@ -50,6 +95,14 @@ const routes = [
             component: ArticleManage
           },
           {
+            name: 'draft-manage',
+            path: 'draft-manage',
+            meta: {
+              needToken: true
+            },
+            component: DraftManage
+          },
+          {
             name: 'category-manage',
             path: 'category-manage',
             meta: {
@@ -72,14 +125,6 @@ const routes = [
               needToken: true
             },
             component: BlogManage
-          },
-          {
-            name: 'draft-manage',
-            path: 'draft-manage',
-            meta: {
-              needToken: true
-            },
-            component: ArticleManage
           },
           {
             name: 'recycle-manage',
@@ -139,10 +184,15 @@ router.beforeEach((to, from, next) => {
   NProgress.start()
   if (to.meta.needToken) {
     if (store.getters.token) { // 判断state中的token是否存在
-      // console.log('beforeEach getters.token')
       next()
     } else {
-      next({path: '/login'})
+      // 在login页面尝试去后台 就停留在login,在其他页去后台就跳转到login
+      if (from.name === 'login') {
+        NProgress.done()
+        next(false)
+      } else {
+        next({name: 'login'})
+      }
     }
   } else {
     next()
