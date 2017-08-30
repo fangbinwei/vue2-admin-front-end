@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="layout">
     <div class="header-box">
       <header>
         <div class="container-fluid">
@@ -11,35 +11,47 @@
             <div class="collapse navbar-collapse justify-content-sm-end" id="navbarSupportedContent">
               <ul class="navbar-nav">
                 <li class="nav-item">
-                  <a class="nav-link" href="">
+                  <router-link :to="{name: 'home'}"
+                               class="nav-link"
+                               active-class="active">
                     <svg class="icon" aria-hidden="true">
                       <use xlink:href="#icon-zhuye"></use>
                     </svg>
-                    首页</a>
+                    首页
+                  </router-link>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="">
+                  <router-link :to="{name: 'category'}"
+                               class="nav-link"
+                               active-class="active">
                     <svg class="icon" aria-hidden="true">
                       <use xlink:href="#icon-fenlei"></use>
                     </svg>
-                    分类</a>
+                    分类
+                  </router-link>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="">
+                  <router-link :to="{name: 'archive'}"
+                               class="nav-link"
+                               active-class="active">
                     <svg class="icon" aria-hidden="true">
                       <use xlink:href="#icon-guidang"></use>
                     </svg>
-                    归档</a>
+                    归档
+                  </router-link>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="">
+                  <router-link :to="{name: 'about'}"
+                               class="nav-link"
+                               active-class="active">
                     <svg class="icon" aria-hidden="true">
                       <use xlink:href="#icon-guanyu"></use>
                     </svg>
-                    关于</a>
+                    关于
+                  </router-link>
                 </li>
-                <li class="nav-item">
-                  <a class="nav-link disabled"href="">
+                <li class="nav-item" >
+                  <a class="nav-link disabled" href="#">
                     <svg class="icon" aria-hidden="true">
                       <use xlink:href="#icon-tuxiangchulileiiconshuchu08"></use>
                     </svg>
@@ -54,7 +66,9 @@
     <div class="header-image container-fluid px-0">
       <img  :src="image.header" alt="header-image">
     </div>
-
+    <keep-alive>
+      <router-view></router-view>
+    </keep-alive>
     <footer>
       <div class="footer-information" :style="{backgroundImage: 'url(' + image.footer + ')'}">
         <p>Posted by: Fang Binwei</p>
@@ -102,7 +116,9 @@
         </div>
       </div>
     </aside>
-    <div class="back-to-top d-sm-none">
+    <div class="back-to-top d-none d-sm-block "
+         :class="showBackToTop"
+         @click="backToTop">
       <svg class="icon arrow-up" aria-hidden="true" >
         <use xlink:href="#icon-top-copy"></use>
       </svg>
@@ -110,19 +126,45 @@
   </div>
 </template>
 <script>
+/* global $:true */
   export default {
     data () {
       return {
+        showBackToTop: {
+          'back-to-top-on': false
+        },
+        threshold: 50,
+        pageYOffset: window.pageYOffset,
         image: {
-          header: require('@/../static/img/blog.jpg'),
-          footer: require('@/../static/img/bloga.jpg')
+          header: require('@/../static/img/blogheader.jpg'),
+          footer: require('@/../static/img/blogfooter.jpg')
         }
       }
+    },
+    methods: {
+      handleShowBackToTop () {
+        switch (window.pageYOffset > this.threshold) {
+          case true:
+            this.showBackToTop['back-to-top-on'] = true
+            break
+          case false:
+            this.showBackToTop['back-to-top-on'] = false
+        }
+      },
+      backToTop () {
+        let $body = $('body')
+        $body.stop().animate({
+          scrollTop: 0
+        }, 200)
+      }
+    },
+    mounted () {
+      $(window).on('scroll', this.handleShowBackToTop)
     }
   }
 
 </script>
-<style scoped>
+<style>
   .icon {
     width: 1em; height: 1em;
     vertical-align: -0.15em;
@@ -245,8 +287,8 @@
   .item-count {
     display: block;
   }
-  body {
-    background-color: #eaf7fd;
+  .layout {
+    /*background-color: #eaf7fd;*/
   }
   @media (max-width: 991px) {
     body {
@@ -260,11 +302,11 @@
     transition: background-color 0.3s;
   }
   .nav-link:hover {
-    background-color: #ddd;
-    color: rgba(0,0,0,1) !important;
+    background-color: rgba(221,221,221,.2);
   }
   header {
-    background-color: rgba(234,247,253,0.8);
+    /*background-color: rgba(234,247,253,0.8);*/
+    background-color: rgba(0,0,0,0.2);
     position: fixed;
     top: 0;
     left: 0;
@@ -288,17 +330,18 @@
   .header-image>img {
     width: 100%;
     height: auto;
-    margin-top: -48px;
   }
   .header-image {
+    margin-top: -48px;
     margin-bottom: 1rem;
+    overflow: hidden;
   }
   .articles>article {
     overflow: hidden;
     background-color: #fff;
-    padding: 1rem 1rem 0 1rem;
+    padding: 1rem 1rem 0 2rem;
     margin-bottom: 1rem;
-    box-shadow:5px 5px 15px #888;
+    box-shadow:1px 1px 1px #aaa;
 
   }
   .article-category{
@@ -326,7 +369,6 @@
     font-size: 1rem;
   }
   .pub-time {
-    margin-left:1rem;
   }
   .article-content {
     margin-top: 1rem;
@@ -424,7 +466,8 @@
   /* -------footer----- */
   .footer-information {
     text-align: center;
-    padding: 2rem 0;
+    padding-top: 60px;
+    padding-bottom: 40px;
     font-size: 85%;
     margin-top: 4rem;
     /*background-image: url(image/bloga.jpg);*/
