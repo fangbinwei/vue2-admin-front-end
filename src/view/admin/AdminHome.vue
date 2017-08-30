@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="container">
+    <div class="admin-container">
       <el-row class="wrap">
         <el-menu :default-active="defaultActive"
                  @select="selectSidebar"
@@ -26,11 +26,11 @@
         </el-menu>
         <div class="main">
           <header class="main-header">
-            <div class="sidebar-toggle" @click="toggleSidebar" :class="{'sidebar-active': sidebarCollapse}">
+            <div class="admin-sidebar-toggle" @click="toggleSidebar" :class="{'admin-sidebar-active': sidebarCollapse}">
               <i class="el-icon-caret-left"></i>
             </div>
-            <el-breadcrumb separator="/" class="breadcrumb">
-              <el-breadcrumb-item class="breadcrumb-item"
+            <el-breadcrumb separator="/" class="my-breadcrumb">
+              <el-breadcrumb-item class="admin-breadcrumb-item"
                                   v-for="(item,index) in levelList"
                                   :key="index" :to="{path: item.path}">{{item.name}}</el-breadcrumb-item>
             </el-breadcrumb>
@@ -48,13 +48,14 @@
   </div>
 </template>
 <script>
-  import $ from 'jquery'
+//  import $ from 'jquery'
+/* global $:true */
   export default {
     data () {
       return {
         sidebarCollapse: false,
         levelList: null,
-        adminPic: require('../../static/img/bench_gif.gif') // static$ alias
+        adminPic: require('@/..//static/img/bench_gif.gif') // static$ alias
       }
     },
     computed: {
@@ -140,14 +141,6 @@
     position: relative;
     z-index: 9999999;
   }
-  .container {
-    /*margin-left: auto;*/
-    /*margin-right: auto;*/
-    /*padding-left: 15px;*/
-    /*padding-right: 15px;*/
-  }
-  .el-icon-caret-right {
-  }
   .sidebar-menu {
     position: fixed;
     bottom: 0;
@@ -172,24 +165,24 @@
     align-items: center;
     border-radius: 5px;
   }
-  .sidebar-toggle {
+  .admin-sidebar-toggle {
     cursor: pointer;
     transition: all 1s;
   }
-  .sidebar-toggle i {
+  .admin-sidebar-toggle i {
     color: #fff;
   }
-  .sidebar-active {
+  .admin-sidebar-active {
     transform: rotateY(-180deg);
 
   }
-  .breadcrumb {
+  .my-breadcrumb {
     padding: 0 10px;
   }
-  .breadcrumb-item {
+  .admin-breadcrumb-item {
     font-size: 1.1rem;
   }
-  .breadcrumb-item>span {
+  .admin-breadcrumb-item>span {
     color: #fff;
   }
   .title {
@@ -202,7 +195,7 @@
     overflow: hidden;
     padding: 70px 50px 0;
     border-radius: 5px;
-    border: 1px solid #435175;
+    /*border: 1px solid #435175;*/
     min-height: 100vh;
     margin-top: -50px;
   }
