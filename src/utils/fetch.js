@@ -1,7 +1,7 @@
 import axios from 'axios'
 import {Message} from 'element-ui'
 import store from '../store'
-import app from '../main'
+// import app from '../main'
 // import {getToken} from './auth'
 
 // 创建axios实例
@@ -30,16 +30,17 @@ service.interceptors.response.use(function (response) {
   // Do something with response data
   let data = response.data
   // status '01' cookies过期 status '02' token过期
-  if (data.status === '01' || data.status === '02') {
+  if (data.status === '02') {
     Message({
       type: 'error',
-      message: data.msg
+      message: '您没有权限,请登入',
+      duration: 1000
     })
     store.dispatch('FedLogoutAction')
       .then(() => {
-        app.$router.replace({name: 'login'})
+        // app.$router.replace({name: 'login'})
       })
-    return Promise.reject()
+    return Promise.reject(data.msg)
   }
   // 如果  status不是 '1', 则reject
   if (data.status !== '1') {
