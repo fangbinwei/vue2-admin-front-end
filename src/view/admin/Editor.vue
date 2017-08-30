@@ -15,7 +15,7 @@
         <div class="abstract">
           <el-input v-model="formItem.abstract" placeholder="摘要"></el-input>
         </div>
-        <div class="article-category">
+        <div class="admin-article-category">
           <el-select
             v-model.trim="formItem.category"
             filterable
@@ -47,7 +47,7 @@
 <script>
   import { mavonEditor } from 'mavon-editor'
   import 'mavon-editor/dist/css/index.css'
-  import {saveArticleAPI, getArticleCategoryAPI, queryArticleAPI} from '@/api/article'
+  import {saveArticleAPI, getAllArticleCategoryAPI, queryArticleAPI, queryDraftArticleAPI} from '@/api/article'
   export default {
     components: {
       mavonEditor
@@ -86,7 +86,7 @@
         this.formItem.createTime = new Date()
       },
       updateCategoryList () {
-        getArticleCategoryAPI()
+        getAllArticleCategoryAPI()
           .then((res) => {
             this.categoryOptions = res.data.result
           })
@@ -172,8 +172,17 @@
         // 判断是否是编辑文章
         let id = vue.$route.query.id
         if (id) {
+          let queryAPI
+          switch (vue.$route.query.draft) {
+            case 'yes':
+              queryAPI = queryDraftArticleAPI
+              break
+            case 'no':
+              queryAPI = queryArticleAPI
+          }
+          // 用于保存文件时,查找文章id
           vue.id = id
-          queryArticleAPI({id: id})
+          queryAPI({id: id})
             .then((res) => {
               vue.formItem = res.data.result
               vue.articleInitValue = vue.formItem.rawContent
@@ -192,8 +201,8 @@
         switch (!!this.formItem.content) {
           case true:
             this.$confirm('离开前是否需要保存草稿?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
+              confirmButtonText: '需要',
+              cancelButtonText: '不需要',
               closeOnClickModal: false,
               closeOnPressEscape: false,
               type: 'warning'
@@ -238,10 +247,10 @@
     float: right;
     margin-left: 20px;
   }
-  .abstract,.article-category,.date {
+  .abstract,.admin-article-category,.date {
     display: inline-block;
   }
-  .article-category {
+  .admin-article-category {
     width: 150px;
   }
   .abstract {
