@@ -8,9 +8,22 @@ export function saveArticleAPI (form) {
 }
 export function queryArticleAPI (articleIdObj) {
   return fetch({
-    url: '/api/queryArticle',
+    url: '/api/queryArticleById',
     method: 'post',
     data: articleIdObj
+  })
+}
+export function queryDraftArticleAPI (articleIdObj) {
+  return fetch({
+    url: '/api/queryDraftArticleById',
+    method: 'post',
+    data: articleIdObj
+  })
+}
+export function getAllArticleCategoryAPI () {
+  return fetch({
+    url: '/api/getAllArticleCategory',
+    method: 'get'
   })
 }
 export function getArticleCategoryAPI () {
@@ -29,6 +42,26 @@ export function delArticleAPI (articleIdObj) {
 export function getArticleListAPI (reqParams) {
   return fetch({
     url: '/api/getArticleList',
+    method: 'get',
+    params: reqParams
+  })
+}
+export function getArticleListByDateAPI () {
+  return fetch({
+    url: '/api/getArticleListByDate',
+    method: 'get'
+  })
+}
+export function getArticleListByCateAPI (reqParams) {
+  return fetch({
+    url: '/api/getArticleListByCate',
+    method: 'get',
+    params: reqParams
+  })
+}
+export function getDraftArticleListAPI (reqParams) {
+  return fetch({
+    url: '/api/getDraftArticleList',
     method: 'get',
     params: reqParams
   })
