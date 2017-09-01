@@ -3,6 +3,7 @@
     <div class="category-list">
       <el-table
         :data="categoryData"
+        :emptyText="emptyText"
         border
         height="300"
         style="width: 100%"
@@ -44,13 +45,14 @@
 </template>
 <script>
   import MyDialog from '@/components/dialog'
-  import {getArticleCategoryAPI, updateCategoryAPI} from '@/api/article'
+  import {getAllArticleCategoryAPI, updateCategoryAPI} from '@/api/article'
   export default {
     components: {
       MyDialog
     },
     data () {
       return {
+        emptyText: '暂无数据',
         autofocus: false,
         updateLoading: false,
         loading: false,
@@ -76,13 +78,14 @@
       },
       updateCategoryList () {
         this.loading = true
-        getArticleCategoryAPI()
+        getAllArticleCategoryAPI()
           .then((res) => {
             this.categoryData = res.data.result
             this.loading = false
           })
-          .catch(() => {
-//            this.loading = false
+          .catch((err) => {
+            this.loading = false
+            this.emptyText = err
           })
       },
       updateCategory () {
