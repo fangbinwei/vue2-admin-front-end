@@ -16,6 +16,7 @@
        border
        height="300"
        style="width: 100%"
+       :emptyText="emptyText"
        v-loading="tableLoading">
        <el-table-column
          label="标题"
@@ -104,6 +105,7 @@ import {delArticleAPI, getArticleListAPI, updateCategoryByIdAPI} from '@/api/art
 export default {
   data () {
     return {
+      emptyText: '暂无数据',
       // 用于更改文章分类
       cateLoading: false,
       cateInput: '',
@@ -131,7 +133,7 @@ export default {
         type: 'info'
       })
         .then(() => {
-          this.$router.push({name: 'edit-article', query: {id: row._id}})
+          this.$router.push({name: 'edit-article', query: {id: row._id, draft: 'no'}})
         })
         .catch(() => {
           this.$message({
@@ -214,19 +216,10 @@ export default {
       this.updateArticleList()
     },
     updateArticleList () {
-      let draft
-      switch (this.$route.name) {
-        case 'article-manage':
-          draft = 'no'
-          break
-        case 'draft-manage':
-          draft = 'yes'
-      }
       this.tableLoading = true
       let reqParams = {
         page: this.currentPage,
-        pageSize: this.pageSize,
-        draft: draft
+        pageSize: this.pageSize
       }
       getArticleListAPI(reqParams)
         .then((res) => {
@@ -235,8 +228,9 @@ export default {
           this.totalArticle = queryResult.total
           this.tableLoading = false
         })
-        .catch(() => {
-//          this.tableLoading = false
+        .catch((err) => {
+          this.tableLoading = false
+          this.emptyText = err
         })
     }
   },
@@ -244,6 +238,7 @@ export default {
 //    this.updateArticleList()
 //  },
   beforeRouteEnter (to, from, next) {
+//    console.log('articleManage routerEnter') //  this undefined
     next((vm) => {
       vm.updateArticleList()
     })
