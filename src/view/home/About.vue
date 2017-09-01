@@ -8,12 +8,11 @@
           </div>
           <h1>Sleepwalker</h1><span>开始慢慢相信平行世界的尽头有一个我活成我曾经想要的样子</span>
         </div>
-        <div class="col-sm-5 col-12">
-          <div class="about-content">
-            <h3>Contact</h3>
-            <pre class="codehilite"><code>python -c "import base64; print base64.b64decode('MTUwNjg3MDU0NTQ=')"</code></pre>
-            <span>除了强壮一无所有</span>
-          </div>
+        <div class="col-sm-5 col-12 about-content">
+          <h3>Contact</h3>
+          <pre class="codehilite">
+              <code>python -c "import base64; print base64.b64decode('MTUwNjg3MDU0NTQ=')"</code>
+            </pre>
         </div>
       </div>
     </div>
@@ -71,11 +70,28 @@
     padding-top: 0.25rem;
     border-top: 1px solid rgba(171, 205, 239, 1);
   }
-  .about-content {
-    display: inline-block;
-  }
   .about-content h3 {
     margin-top: 20px;
-
+  }
+  code {
+    display: block;
+    padding: 1.2em 1.4em;
+    line-height: 1.5em;
+    margin: 0;
+    color: #525252;
+    border-radius: 0;
+    white-space: pre;
+    overflow-x: auto;
+  }
+  pre {
+    display: block;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 90%;
+    color: #292b2c;
+    overflow: auto;
+  }
+  .codehilite {
+    background: #f8f8f8;
   }
 </style>

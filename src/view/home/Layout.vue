@@ -7,7 +7,7 @@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
-            <h1 class="navbar-brand mb-0 ">Sleepwalker</h1>
+            <h2 class="navbar-brand mb-0 ">Sleepwalker</h2>
             <div class="collapse navbar-collapse justify-content-sm-end" id="navbarSupportedContent">
               <ul class="navbar-nav">
                 <li class="nav-item">
@@ -66,9 +66,11 @@
     <div class="header-image container-fluid px-0">
       <img  :src="image.header" alt="header-image">
     </div>
-    <keep-alive>
-      <router-view></router-view>
-    </keep-alive>
+    <main>
+      <transition name="slide-left" mode="out-in">
+        <router-view></router-view>
+      </transition>
+    </main>
     <footer>
       <div class="footer-information" :style="{backgroundImage: 'url(' + image.footer + ')'}">
         <p>Posted by: Fang Binwei</p>
@@ -116,6 +118,7 @@
         </div>
       </div>
     </aside>
+    <!--TODO back-to-top封装成组件-->
     <div class="back-to-top d-none d-sm-block "
          :class="showBackToTop"
          @click="backToTop">
@@ -165,6 +168,25 @@
 
 </script>
 <style>
+  .slide-left-enter-active, .slide-left-leave-active {
+    transition: all .2s ease;
+  }
+  .slide-left-enter {
+    opacity: 0;
+  }
+  .slide-left-leave-to {
+    opacity: 0;
+    transform: translate(30px,0);
+  }
+  h1 {
+    font-size: 2rem !important;
+  }
+  h2 {
+    font-size: 1.5rem !important;
+  }
+  h3 {
+    font-size: 1.17rem !important;
+  }
   .icon {
     width: 1em; height: 1em;
     vertical-align: -0.15em;
@@ -305,13 +327,7 @@
     background-color: rgba(221,221,221,.2);
   }
   header {
-    /*background-color: rgba(234,247,253,0.8);*/
     background-color: rgba(0,0,0,0.2);
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1050;
     display: block;
   }
   .header-box {
@@ -336,12 +352,16 @@
     margin-bottom: 1rem;
     overflow: hidden;
   }
+  main {
+    min-height: 100vh;
+  }
   .articles>article {
     overflow: hidden;
     background-color: #fff;
     padding: 1rem 1rem 0 2rem;
     margin-bottom: 1rem;
-    box-shadow:1px 1px 1px #aaa;
+    box-shadow:1px 1px 1px #ddd;
+    border: 1px solid #eee;
 
   }
   .article-category{
@@ -359,6 +379,7 @@
   .article-title>a {
     text-decoration: none;
     color: #41684d;
+    /*color: #42b983;*/
   }
   .article-title>a:hover{
     color: #000;
@@ -369,12 +390,7 @@
     font-size: 1rem;
   }
   .pub-time {
-  }
-  .article-content {
-    margin-top: 1rem;
-    padding-top: 1.5rem;
-    text-indent: 2em;
-    border-top: 1px solid black;
+    font-weight: 600;
   }
   .article-excerpt {
     margin-top: 1rem;

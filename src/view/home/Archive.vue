@@ -15,12 +15,15 @@
             <div class="archives-article" v-for="(item,index) in yearItem.articleList">
               <div>
                 <span class="created-time">{{item.createTime | moment}}</span>
-                <a class="archives-category" href="">{{item.category}}</a>
+                <router-link
+                  class="archives-category"
+                  :to="{name: 'categoryDetail', params: {category: item.category}}">{{item.category}}</router-link>
               </div>
               <div>
-                <a class="post-title" href="">
+                <router-link class="post-title"
+                             :to="{name: 'articleDetail', query: {id: item._id}}">
                   <span>{{item.title}}</span>
-                </a>
+                </router-link>
               </div>
             </div>
           </div>
@@ -77,7 +80,7 @@
     position: absolute;
     left: 0;
     top: 50%;
-    margin-left: -6px;
+    margin-left: -7px;
     margin-top: -4px;
     width: 10px;
     height: 10px;
@@ -118,11 +121,12 @@
   .archives-article .created-time {
     margin-left: 2rem;
     color: #666;
+    font-weight: 600;
   }
   .archives-article .post-title {
     margin-left: 2rem;
     text-decoration: none;
-    color: black;
+    color: #42b983;
     font-size: 1.1rem;
     font-weight: bold;
   }

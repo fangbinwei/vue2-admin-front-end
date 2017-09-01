@@ -8,9 +8,11 @@
         <h4>目前共计<span>{{categoryList.length}}</span>个分类</h4>
       </div>
       <div class="row justify-content-between mx-0">
-        <div class="col-md-3 col-11 category">
+        <div class="col-md-3 col-12 category">
           <ul class="nav flex-column">
-            <li class="nav-item" v-for="(item,index) in categoryList">
+            <li class="nav-item"
+                v-for="(item,index) in categoryList"
+                :key="index">
               <router-link
                 class="nav-link"
                 :to="{name: 'categoryDetail', params: {category: item._id}}">{{item._id}} ({{item.count}})</router-link>
@@ -18,9 +20,12 @@
           </ul>
         </div>
         <div class="col-8 category-list px-0">
-          <keep-alive>
-            <router-view></router-view>
-          </keep-alive>
+                <!--TODO router-view + :key 会出现问题?-->
+          <transition name="fade">
+            <keep-alive>
+              <router-view></router-view>
+            </keep-alive>
+          </transition>
         </div>
       </div>
     </div>
@@ -33,6 +38,12 @@
     data () {
       return {
         categoryList: []
+      }
+    },
+    computed: {
+      key () {
+        console.log('route', this.$route.path.replace(/\//g, '_'))
+        return this.$route.path.replace(/\//g, '_')
       }
     },
     methods: {
@@ -60,10 +71,15 @@
     padding-left: 0;
   }
   .category>ul {
-    border: 2px solid black;
+    border: 2px solid rgba(0,0,0,.4);
+    border-radius: 4px;
   }
   .category a {
-    color: #000;
+    color: #42b983;
+    /*font-weight: bold;*/
+  }
+  .router-link-active {
+    font-weight: bold;
   }
   .category-list {
     border-left: 4px solid #eee;

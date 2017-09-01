@@ -4,21 +4,25 @@
         <div class="row">
           <div class="col-12 ">
             <div class="articles">
-              <article v-for="(item,index) in articleData">
+              <article v-for="(item,index) in articleData"
+                       :key="index">
                 <div class="article-header">
-                  <h3 class="article-title">
-                    <a href="">
+                  <h2 class="article-title">
+                    <router-link
+                      :to="{name: 'articleDetail', query: {id: item._id}}">
                       {{item.title}}
-                    </a>
-                  </h3>
+                    </router-link>
+                  </h2>
                 </div>
                 <div class="row">
                   <div class="col-md-auto">
-                    <span class="pub-time">{{item.showCreateTime}}</span>
+                    <span class="pub-time">{{item.createTime | momentWithYear}}</span>
                   </div>
                   <div class="col-md-4">
-                    <span class="views-count">阅读 22</span>
-                    <a class="article-category" href="#">{{item.category}}</a>
+                    <!--<span class="views-count">阅读 22</span>-->
+                    <router-link
+                      :to="{name: 'categoryDetail', params: {category: item.category}}"
+                      class="article-category">{{item.category}}</router-link>
                   </div>
                 </div>
 
@@ -28,7 +32,10 @@
                   </p>
                 </div>
                 <div class="read-more cl-effect-14">
-                  <a href="#" class="more-link">继续阅读 <span class="meta-nav">→</span></a>
+                  <router-link class="more-link"
+                               :to="{name: 'articleDetail', query: {id: item._id}}">
+                    继续阅读 <span class="meta-nav">→</span>
+                  </router-link>
                 </div>
               </article>
             </div>
@@ -96,6 +103,7 @@
       }
     },
     beforeRouteEnter (to, from, next) {
+      console.log(1)
       next((vm) => {
         vm.updateArticleList()
       })
