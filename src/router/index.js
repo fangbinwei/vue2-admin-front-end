@@ -16,6 +16,7 @@ import Login from '@/view/admin/login'
 // blog页面
 import Layout from '@/view/home/Layout'
 import Home from '@/view/home/Home'
+import ArticleDetail from '@/view/home/ArticleDetail'
 import Archive from '@/view/home/Archive'
 import Category from '@/view/home/Category'
 import CategoryDetail from '@/view/home/CategoryDetail'
@@ -40,6 +41,11 @@ const routes = [
         name: 'home',
         path: 'home',
         component: Home
+      },
+      {
+        name: 'articleDetail',
+        path: 'articleDetail',
+        component: ArticleDetail
       },
       {
         name: 'archive',
@@ -71,8 +77,8 @@ const routes = [
     component: Login
   },
   {
-    path: '/admin',
     name: 'admin',
+    path: '/admin',
     component: AdminHome,
     meta: {
       needToken: true
@@ -174,6 +180,7 @@ const routes = [
 ]
 
 const router = new Router({
+  mode: 'history',
   routes: routes
 })
 
