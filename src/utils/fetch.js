@@ -1,7 +1,7 @@
 import axios from 'axios'
 import {Message} from 'element-ui'
 import store from '../store'
-// import app from '../main'
+import app from '../main'
 // import {getToken} from './auth'
 
 // 创建axios实例
@@ -48,6 +48,7 @@ service.interceptors.response.use(function (response) {
       type: 'error',
       message: data.msg
     })
+    app.$router.replace({name: 'home'})
     return Promise.reject()
   } else {
     return response
