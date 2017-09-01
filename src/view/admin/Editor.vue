@@ -171,13 +171,16 @@
 //        vue.submitted = false  如果router-view被keep-alive包括 则需要这句
         // 判断是否是编辑文章
         let id = vue.$route.query.id
+        console.log('id', id, typeof id)
         if (id) {
           let queryAPI
-          switch (vue.$route.query.draft) {
+          switch (vue.$route.query.draft || 'no') {
             case 'yes':
+              console.log(1)
               queryAPI = queryDraftArticleAPI
               break
             case 'no':
+              console.log(2)
               queryAPI = queryArticleAPI
           }
           // 用于保存文件时,查找文章id
