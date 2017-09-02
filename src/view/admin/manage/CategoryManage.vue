@@ -116,9 +116,9 @@
         }
       }
     },
-    mounted () {
-      this.updateCategoryList()
-    },
+//    mounted () {
+//      this.updateCategoryList()
+//    },
     beforeRouteEnter (to, from, next) {
       next((vm) => {
         vm.updateCategoryList()

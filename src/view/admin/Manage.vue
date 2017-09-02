@@ -13,8 +13,8 @@
           </el-tab-pane>
           <el-tab-pane label="草稿箱" name="draft-manage">
           </el-tab-pane>
-          <el-tab-pane label="回收站" name="recycle-manage">
-          </el-tab-pane>
+          <!--<el-tab-pane label="回收站" name="recycle-manage">-->
+          <!--</el-tab-pane>-->
         </el-tabs>
         <keep-alive>
           <router-view></router-view>

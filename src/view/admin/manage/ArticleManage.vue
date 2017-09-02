@@ -204,6 +204,8 @@ export default {
         })
       })
     },
+    handleStick () {
+    },
     // 每页显示x条
     handleSizeChange (size) {
       this.pageSize = size
