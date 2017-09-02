@@ -102,7 +102,7 @@
       logout () {
         this.$store.dispatch('FedLogoutAction')
           .then(() => {
-            this.$router.replace({name: 'login'})
+            this.$router.replace({name: 'home'})
             this.$message({
               type: 'success',
               message: '成功退出!'
