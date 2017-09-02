@@ -47,7 +47,7 @@
         getArticleListByDateAPI()
           .then((res) => {
             let queryResult = res.data
-            console.log('res', res)
+//            console.log('res', res)
             this.articleData = queryResult.result
             this.totalArticle = queryResult.total
           })
@@ -56,7 +56,6 @@
       }
     },
     beforeRouteEnter (to, from, next) {
-      console.log(1)
       next((vm) => {
         vm.updateArticleList()
       })
@@ -129,6 +128,7 @@
     color: #42b983;
     font-size: 1.1rem;
     font-weight: bold;
+    display: block;
   }
   .archives-article .post-title:before {
     content: " ";

@@ -6,7 +6,7 @@
           <div class="profile-image">
             <img src="http://i1.piimg.com/567571/d5b3c0f3ca1250fd.jpg" alt="profile-image" />
           </div>
-          <h1>Sleepwalker</h1><span>开始慢慢相信平行世界的尽头有一个我活成我曾经想要的样子</span>
+          <h2>Sleepwalker</h2><span>开始慢慢相信平行世界的尽头有一个我活成我曾经想要的样子</span>
         </div>
         <div class="col-sm-5 col-12 about-content">
           <h3>Contact</h3>
@@ -55,7 +55,7 @@
   .profile-image img:hover{
     filter: grayscale(100%);
   }
-  .profile h1 {
+  .profile h2 {
     color: #f3f3f3;
     font-size: 1.3rem;
     margin-top: 0.5em;

@@ -1,19 +1,23 @@
 <template>
   <div>
-    <div class="category-title">
-      <h5 class="title">{{$route.params.category}}</h5>
-    </div>
-    <div class="category-article"
-         v-for="(item,index) in articleList"
-         :key="index">
-      <div>
-        <span class="created-time">{{item.createTime | momentWithYear}}</span>
+    <transition name="fade" mode="out-in">
+      <div :key="$route.params.category">
+        <div class="category-title">
+          <h5 class="title">{{$route.params.category}}</h5>
+        </div>
+        <div class="category-article"
+             v-for="(item,index) in articleList"
+             :key="index">
+          <div>
+            <span class="created-time">{{item.createTime | momentWithYear}}</span>
+          </div>
+          <router-link class="post-title"
+                       :to="{name: 'articleDetail', query: {id: item._id}}">
+            <span>{{item.title}}</span>
+          </router-link>
+        </div>
       </div>
-      <router-link class="post-title"
-                   :to="{name: 'articleDetail', query: {id: item._id}}">
-        <span>{{item.title}}</span>
-      </router-link>
-    </div>
+    </transition>
 
   </div>
 </template>
@@ -32,7 +36,7 @@
         getArticleListByCateAPI({category: this.$route.params.category})
           .then((res) => {
             this.articleList = res.data.result.list
-            console.log('articleList', this.articleList)
+//            console.log('articleList', this.articleList)
             this.total = res.data.result.total
           })
           .catch(() => {

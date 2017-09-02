@@ -21,10 +21,8 @@
         </div>
         <div class="col-8 category-list px-0">
                 <!--TODO router-view + :key 会出现问题?-->
-          <transition name="fade">
-            <keep-alive>
-              <router-view></router-view>
-            </keep-alive>
+          <transition name="fade" mode="out-in">
+            <router-view></router-view>
           </transition>
         </div>
       </div>

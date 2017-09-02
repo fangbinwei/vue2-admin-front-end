@@ -20,7 +20,7 @@
                 </div>
               </div>
               <div class="article-content">
-                <div v-html="articleData.content" class="markdown-content"></div>
+                <div v-html="articleData.content" class="markdown-content" v-highlight></div>
               </div>
 
             </article>

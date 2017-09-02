@@ -78,46 +78,7 @@
       </div>
 
     </footer>
-
-    <div class="sidebar-toggle d-none d-sm-block">
-      <div class="sidebar-toggle-line-wrap">
-        <span class="sidebar-toggle-line sidebar-toggle-line-first" ></span>
-        <span class="sidebar-toggle-line sidebar-toggle-line-middle" ></span>
-        <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-      </div>
-    </div>
-    <aside id="sidebar" class="sidebar d-md-none">
-      <div class="container sidebar-content">
-        <div class="row">
-          <div class="col">
-            <div class="sidebar-image">
-              <img src="http://i1.piimg.com/567571/d5b3c0f3ca1250fd.jpg" alt="profile-image" />
-            </div>
-            <span>方宾伟</span>
-          </div>
-        </div>
-        <div class="row justify-content-center sidebar-nav">
-          <div class="col-3 sidebar-nav-post">
-            <a href="#">
-              <span class="item-count">64</span>
-              <span>日志</span>
-            </a>
-          </div>
-          <div class="col-3 sidebar-nav-category">
-            <a href="#">
-              <span class="item-count">64</span>
-              <span>分类</span>
-            </a>
-          </div>
-          <div class="col-3 sidebar-nav-photo">
-            <a href="#">
-              <span class="item-count">63</span>
-              <span>相册</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </aside>
+    <!--<my-sidebar></my-sidebar>-->
     <!--TODO back-to-top封装成组件-->
     <div class="back-to-top d-none d-sm-block "
          :class="showBackToTop"
@@ -130,7 +91,11 @@
 </template>
 <script>
 /* global $:true */
+  import MySidebar from '@/components/sidebar'
   export default {
+    components: {
+      MySidebar
+    },
     data () {
       return {
         showBackToTop: {
@@ -176,7 +141,7 @@
   }
   .slide-left-leave-to {
     opacity: 0;
-    transform: translate(30px,0);
+    transform: translate(150px,0);
   }
   h1 {
     font-size: 2rem !important;
@@ -216,99 +181,6 @@
   .back-to-top.back-to-top-on{
     bottom: 19px;
   }
-  /* sider-toggle */
-  .sidebar-toggle {
-    width: 24px;
-    height: 24px;
-    padding: 5px;
-    background: #222;
-    position: fixed;
-    z-index: 1050;
-    right: 30px;
-    bottom: 45px;
-    cursor: pointer;
-    line-height: 0;
-
-  }
-  .sidebar-toggle-line{
-    width: 100%;
-    background: #fff;
-    height: 2px;
-    display: inline-block;
-    vertical-align: top;
-    margin-top: 3px;
-    position: relative;
-  }
-  .sidebar-toggle-line:first-child {
-    margin-top: 0;
-  }
-  /* sidebar */
-  .sidebar {
-    width: 0px;
-    position: fixed;
-    background: #222;
-    top: 0;
-    bottom: 0;
-    right: 0;
-  }
-  .sidebar-content {
-    text-align: center;
-    margin-top: 3.5rem;
-    display: none;
-  }
-  .sidebar-image{
-    display: block;
-    width: 7.5rem;
-    height: 7.5rem;
-    overflow: hidden;
-    border-radius: 10%;
-    margin: 0 auto;
-    background: rgba(250, 214, 195, 1);
-    border: 4px solid rgba(250, 214, 195, 1);
-  }
-  .sidebar-image + span {
-    margin-top: 0.3rem;
-    color: #eee;
-    display: block;
-  }
-  .sidebar-image img {
-    max-width: 100%;
-    border-radius: 10%;
-    filter: grayscale(0);
-    -webkit-transition: filter 0.3s;
-    -moz-transition: filter 0.3s;
-    -o-transition: filter 0.3s;
-    transition: filter 0.5s;
-
-  }
-  .sidebar-image img:hover{
-    filter: grayscale(100%);
-  }
-  .sidebar-nav{
-    text-align: center;
-    margin-top: 1rem;
-  }
-  .sidebar-nav span{
-    margin-top: 0.5rem;
-    font-weight: normal;
-    display: block;
-  }
-  .sidebar-nav a{
-    text-decoration: none;
-    color: #999;
-  }
-  .sidebar-nav a:hover{
-    color: #eee;
-  }
-  .sidebar-nav-post {
-    border-right: 1px solid #333;
-  }
-  .sidebar-nav-category {
-    border-right: 1px solid #333;
-  }
-  .item-count {
-    display: block;
-  }
   .layout {
     /*background-color: #eaf7fd;*/
   }
@@ -334,14 +206,14 @@
     height: 48px;
     position: relative;
   }
-  @media (max-width: 767px) {
-    header {
-      position: relative !important;
-    }
-    .header-box {
-      height: auto !important;
-    }
-  }
+  /*@media (max-width: 767px) {*/
+    /*header {*/
+      /*position: relative !important;*/
+    /*}*/
+    /*.header-box {*/
+      /*height: auto !important;*/
+    /*}*/
+  /*}*/
 
   .header-image>img {
     width: 100%;
