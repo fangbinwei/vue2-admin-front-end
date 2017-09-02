@@ -23,7 +23,7 @@ import CategoryDetail from '@/view/home/CategoryDetail'
 import About from '@/view/home/About'
 //
 import Router from 'vue-router'
-import store from '../store'
+// import store from '../store'
 // import {getToken} from '../utils/auth'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
@@ -190,17 +190,18 @@ NProgress.configure({ easing: 'ease', speed: 500, showSpinner: false })
 router.beforeEach((to, from, next) => {
   NProgress.start()
   if (to.meta.needToken) {
-    if (store.getters.token) { // 判断state中的token是否存在
-      next()
-    } else {
-      // 在login页面尝试去后台 就停留在login,在其他页去后台就跳转到login
-      if (from.name === 'login') {
-        NProgress.done()
-        next(false)
-      } else {
-        next({name: 'login'})
-      }
-    }
+    next() // 允许参观后台
+    // if (store.getters.token) { // 判断state中的token是否存在
+    //   next()
+    // } else {
+    //   // 在login页面尝试去后台 就停留在login,在其他页去后台就跳转到login
+    //   if (from.name === 'login') {
+    //     NProgress.done()
+    //     next(false)
+    //   } else {
+    //     next({name: 'login'})
+    //   }
+    // }
   } else {
     next()
   }
