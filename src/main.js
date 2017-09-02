@@ -13,12 +13,22 @@ import 'normalize.css'
 import '@/../static/icon/iconfont'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.min'
+import hljs from 'highlight.js'
+import 'highlight.js/styles/default.css' // 样式文件
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 
 Vue.filter('moment', moment)
 Vue.filter('momentWithYear', momentWithYear)
+
+Vue.directive('highlight', function (el) {
+  let blocks = el.querySelectorAll('pre code')
+  blocks.forEach((block) => {
+    hljs.highlightBlock(block)
+  })
+})
+
 /* eslint-disable no-new */
 const app = new Vue({
   el: '#app',
