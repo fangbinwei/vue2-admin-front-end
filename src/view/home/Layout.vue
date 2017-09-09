@@ -3,7 +3,7 @@
     <div class="header-box">
       <header>
         <div class="container-fluid">
-          <nav class="navbar  navbar-expand-sm navbar-light py-1">
+          <nav class="navbar navbar-expand-sm navbar-light py-1">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
@@ -51,11 +51,19 @@
                   </router-link>
                 </li>
                 <li class="nav-item" >
-                  <a class="nav-link disabled" href="#">
+                  <router-link :to="{name: 'admin'}"
+                               class="nav-link"
+                               active-class="active">
                     <svg class="icon" aria-hidden="true">
-                      <use xlink:href="#icon-tuxiangchulileiiconshuchu08"></use>
+                      <use xlink:href="#icon-guanli"></use>
                     </svg>
-                    相册</a>
+                    管理
+                  </router-link>
+                  <!--<a class="nav-link disabled" href="#">-->
+                    <!--<svg class="icon" aria-hidden="true">-->
+                      <!--<use xlink:href="#icon-tuxiangchulileiiconshuchu08"></use>-->
+                    <!--</svg>-->
+                    <!--相册</a>-->
                 </li>
               </ul>
             </div>
@@ -75,6 +83,7 @@
       <div class="footer-information" :style="{backgroundImage: 'url(' + image.footer + ')'}">
         <p>Posted by: Fang Binwei</p>
         <p>Contact information: fangbinweiATqq.com</p>
+        <a href="http://www.miitbeian.gov.cn" style="text-decoration: none; color: black">浙ICP备17037713号-1</a>
       </div>
 
     </footer>
@@ -120,7 +129,7 @@
         }
       },
       backToTop () {
-        let $body = $('body')
+        let $body = $('body, html')
         $body.stop().animate({
           scrollTop: 0
         }, 200)
@@ -143,6 +152,14 @@
     opacity: 0;
     transform: translate(150px,0);
   }
+  html {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  * {
+    box-sizing: inherit;
+  }
   h1 {
     font-size: 2rem !important;
   }
@@ -151,6 +168,10 @@
   }
   h3 {
     font-size: 1.17rem !important;
+  }
+  #nprogress {
+    position: relative;
+    z-index: 9999999;
   }
   .icon {
     width: 1em; height: 1em;
@@ -199,30 +220,33 @@
     background-color: rgba(221,221,221,.2);
   }
   header {
-    background-color: rgba(0,0,0,0.2);
+    background-color: rgba(210,239,247,.7);
     display: block;
   }
   .header-box {
-    height: 48px;
+    /*height: 48px;*/
     position: relative;
   }
-  /*@media (max-width: 767px) {*/
-    /*header {*/
-      /*position: relative !important;*/
-    /*}*/
-    /*.header-box {*/
-      /*height: auto !important;*/
-    /*}*/
-  /*}*/
 
   .header-image>img {
     width: 100%;
     height: auto;
   }
   .header-image {
-    margin-top: -48px;
     margin-bottom: 1rem;
     overflow: hidden;
+  }
+  @media (min-width: 576px) {
+    .header-image {
+      margin-top: -54px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+    header {
+      background-color: rgba(0,0,0,0.2);
+      /*background-color: rgba(210,239,247,.7);*/
+      display: block;
+    }
   }
   main {
     min-height: 100vh;
@@ -255,6 +279,7 @@
   }
   .article-title>a:hover{
     color: #000;
+    text-decoration: none;
   }
 
   .pub-time .views-count {
@@ -271,86 +296,6 @@
 
   }
 
-  /* read more */
-  .read-more {
-    font-family: 'Ubuntu', sans-serif;
-    font-weight: 400;
-    word-spacing: 1px;
-    letter-spacing: 0.01em;
-    text-align: center;
-    margin-top: 20px;
-  }
-  .cl-effect-14 a {
-    padding: 0 20px;
-    height: 45px;
-    line-height: 45px;
-    position: relative;
-    display: inline-block;
-    margin: 0.5rem;
-    letter-spacing: 1px;
-    font-weight: 400;
-    text-shadow: 0 0 1px rgba(255, 255, 255, 0.3);
-    color: rgb(0,0,0);
-    text-decoration: none;
-  }
-
-  .cl-effect-14 a::before,
-  .cl-effect-14 a::after {
-    position: absolute;
-    width: 45px;
-    height: 1px;
-    background: #C3C3C3;
-    content: '';
-    -webkit-transition: all 0.3s;
-    -moz-transition: all 0.3s;
-    transition: all 0.3s;
-    pointer-events: none;
-  }
-
-  .cl-effect-14 a::before {
-    top: 0;
-    left: 0;
-    -webkit-transform: rotate(90deg);
-    -moz-transform: rotate(90deg);
-    transform: rotate(90deg);
-    -webkit-transform-origin: 0 0;
-    -moz-transform-origin: 0 0;
-    transform-origin: 0 0;
-  }
-
-  .cl-effect-14 a::after {
-    right: 0;
-    bottom: 0;
-    -webkit-transform: rotate(90deg);
-    -moz-transform: rotate(90deg);
-    transform: rotate(90deg);
-    -webkit-transform-origin: 100% 0;
-    -moz-transform-origin: 100% 0;
-    transform-origin: 100% 0;
-  }
-
-  .cl-effect-14 a:hover::before,
-  .cl-effect-14 a:hover::after,
-  .cl-effect-14 a:focus::before,
-  .cl-effect-14 a:focus::after {
-    background: #000;
-  }
-
-  .cl-effect-14 a:hover::before,
-  .cl-effect-14 a:focus::before {
-    left: 50%;
-    -webkit-transform: rotate(0deg) translateX(-50%);
-    -moz-transform: rotate(0deg) translateX(-50%);
-    transform: rotate(0deg) translateX(-50%);
-  }
-
-  .cl-effect-14 a:hover::after,
-  .cl-effect-14 a:focus::after {
-    right: 50%;
-    -webkit-transform: rotate(0deg) translateX(50%);
-    -moz-transform: rotate(0deg) translateX(50%);
-    transform: rotate(0deg) translateX(50%);
-  }
   /* -------footer----- */
   .footer-information {
     text-align: center;
