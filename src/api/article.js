@@ -9,15 +9,15 @@ export function saveArticleAPI (form) {
 export function queryArticleAPI (articleIdObj) {
   return fetch({
     url: '/api/queryArticleById',
-    method: 'post',
-    data: articleIdObj
+    method: 'get',
+    params: articleIdObj
   })
 }
 export function queryDraftArticleAPI (articleIdObj) {
   return fetch({
     url: '/api/queryDraftArticleById',
-    method: 'post',
-    data: articleIdObj
+    method: 'get',
+    params: articleIdObj
   })
 }
 export function getAllArticleCategoryAPI () {
@@ -78,5 +78,20 @@ export function updateCategoryByIdAPI (cateObj) {
     url: '/api/updateCategoryById',
     method: 'post',
     data: cateObj
+  })
+}
+
+export function saveCommentAPI (form) {
+  return fetch({
+    url: '/api/saveComment',
+    method: 'post',
+    data: form
+  })
+}
+export function getCommentAPI (articleIdObj) {
+  return fetch({
+    url: '/api/getComment',
+    method: 'get',
+    params: articleIdObj
   })
 }
