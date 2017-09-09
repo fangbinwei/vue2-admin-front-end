@@ -34,7 +34,7 @@
                                   v-for="(item,index) in levelList"
                                   :key="index" :to="{path: item.path}">{{item.name}}</el-breadcrumb-item>
             </el-breadcrumb>
-            <span class="title">Sleepwalker</span>
+            <span class="admin-title">Sleepwalker</span>
           </header>
           <div class="main-container">
             <router-view></router-view>
@@ -129,19 +129,7 @@
 </script>
 
 <style>
-  html {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-  }
-  * {
-    box-sizing: inherit;
-  }
-  #nprogress {
-    position: relative;
-    z-index: 9999999;
-  }
-  .sidebar-menu {
+  .wrap .sidebar-menu {
     position: fixed;
     bottom: 0;
     top: 0;
@@ -149,7 +137,7 @@
     overflow: hidden;
     border-radius: 5px;
   }
-  .sidebar-menu:not(.el-menu--collapse) {
+  .wrap .sidebar-menu:not(.el-menu--collapse) {
     width: 150px;
   }
 
@@ -182,10 +170,10 @@
   .admin-breadcrumb-item {
     font-size: 1.1rem;
   }
-  .admin-breadcrumb-item>span {
+  .admin-breadcrumb-item>span{
     color: #fff;
   }
-  .title {
+  .admin-title {
     padding: 0 15px;
     position: absolute;
     right: 0;
