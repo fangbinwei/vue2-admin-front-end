@@ -4,7 +4,7 @@
                   :loading="formLoading"></comment-form>
     <div class="comment-list">
       <div class="loader" v-show="commentLoading">
-        <span class="spinner">
+        <span class="comment-spinner">
         </span>
       </div>
       <!--<span class="spinner" v-show="commentLoading"></span>-->
@@ -107,7 +107,7 @@
     background-color: rgba(220,220,220,.5);
     border-radius: 10px;
   }
-  .comment-list .spinner {
+  .comment-list .comment-spinner {
     margin-top: 5em;
     z-index: 999;
   }
@@ -128,7 +128,7 @@
     margin-bottom: 2rem;
     padding-left: 0.4rem;
   }
-  .spinner {
+  .comment-spinner {
     width: 20px;
     height: 20px;
     background-color: #47b784;

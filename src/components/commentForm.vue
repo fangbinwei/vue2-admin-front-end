@@ -2,7 +2,7 @@
   <div>
     <div class="comment-box">
       <div class="loader" v-show="loading">
-        <span class="spinner">
+        <span class="comment-spinner">
         </span>
       </div>
 
@@ -47,7 +47,7 @@
           content,
           name
         }
-        //  TODO表单验证还需要完善
+        // TODO 表单验证还需要完善
         if (!content || !name) {
           this.$message('please check again~')
         } else {
