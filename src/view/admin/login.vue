@@ -20,7 +20,7 @@
         <el-form-item>
           <el-button type="primary"
                      @click="submitForm('ruleForm')"
-                     v-loading="submitLoading">提交</el-button>
+                     :loading="submitLoading">提交</el-button>
           <el-button @click="resetForm('ruleForm')">重置</el-button>
         </el-form-item>
       </el-form>
@@ -81,24 +81,6 @@
                 console.log('login.vue err', err)
                 this.submitLoading = false
               })
-//            axios.post('/api/login', loginForm)
-//              .then((res) => {
-//                if (res.data.status === '1') {
-//                  this.$message({
-//                    message: '登入成功',
-//                    type: 'success'
-//                  })
-//                  this.$router.push({name: 'manage'})
-//                } else if (res.data.status === '2') {
-//                  this.$message.error('密码错误')
-//                }
-//                this.submitLoading = false
-//              })
-//              .catch((err) => {
-//                console.log('error', err)
-//                this.submitLoading = false
-//                this.$message.error('服务器出错,请重新提交')
-//              })
           } else {
             return false
           }
@@ -122,6 +104,32 @@
     padding: 20px 20px 20px 0;
     border-radius: 3px;
     box-shadow: 1px 1px 1px #aaa;
+  }
+  @media (max-width: 992px) {
+    .login-form {
+      width: 60%;
+      position: fixed;
+      left: 50%;
+      top: 30%;
+      margin-left: -30%;
+      border: 1px solid #aaa;
+      padding: 20px 20px 20px 0;
+      border-radius: 3px;
+      box-shadow: 1px 1px 1px #aaa;
+    }
+  }
+  @media (max-width: 720px) {
+    .login-form {
+      width: 80%;
+      position: fixed;
+      left: 50%;
+      top: 30%;
+      margin-left: -40%;
+      border: 1px solid #aaa;
+      padding: 20px 20px 20px 0;
+      border-radius: 3px;
+      box-shadow: 1px 1px 1px #aaa;
+    }
   }
 
   .login-bg {
