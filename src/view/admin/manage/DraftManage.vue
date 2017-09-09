@@ -31,7 +31,7 @@
           width="200">
           <template scope="scope">
             <el-icon name="time"></el-icon>
-            <span style="margin-left: 10px">{{ scope.row.showCreateTime }}</span>
+            <span style="margin-left: 10px">{{ scope.row.createTime | momentWithYear}}</span>
           </template>
         </el-table-column>
         <el-table-column
