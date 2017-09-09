@@ -95,3 +95,9 @@ export function getCommentAPI (articleIdObj) {
     params: articleIdObj
   })
 }
+export function getAllCommentAPI () {
+  return fetch({
+    url: '/api/getAllComment',
+    method: 'get'
+  })
+}
