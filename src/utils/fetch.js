@@ -6,8 +6,8 @@ import app from '../main'
 
 // 创建axios实例
 const service = axios.create({
-  baseURL: 'http://localhost:8080/',
-  timeout: 5000,
+  // baseURL: 'http://localhost:3000/',
+  timeout: 10000,
   data: {}
   // withCredentials: true, // 让cookies可以跨域传送?
 })
@@ -41,6 +41,15 @@ service.interceptors.response.use(function (response) {
         // app.$router.replace({name: 'login'})
       })
     return Promise.reject(data.msg)
+  }
+  // login 密码错误
+  if (data.status === '2') {
+    Message({
+      type: 'error',
+      message: '密码错误',
+      duration: 1000
+    })
+    return Promise.reject()
   }
   // 如果  status不是 '1', 则reject
   if (data.status !== '1') {
