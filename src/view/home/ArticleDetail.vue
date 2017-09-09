@@ -16,14 +16,19 @@
                 </div>
                 <div class="col-md-4">
                   <!--<span class="views-count">阅读 0</span>-->
-                  <a class="article-category" href="">{{articleData.category}}</a>
+                  <!--<a class="article-category" href="">{{articleData.category}}</a>-->
+                  <router-link class="article-category"
+                               v-if="articleData.category"
+                               :to="{name: 'categoryDetail', params: {category:articleData.category}}">{{articleData.category}}</router-link>
                 </div>
               </div>
               <div class="article-content">
                 <div v-html="articleData.content" class="markdown-content" v-highlight></div>
               </div>
-
             </article>
+            <div class="comment">
+              <comment :articleId="$route.query.id"></comment>
+            </div>
 
           </div>
         </div>
@@ -34,8 +39,12 @@
 
 </template>
 <script>
+  import Comment from '@/components/comment'
   import {queryArticleAPI} from '@/api/article'
   export default {
+    components: {
+      Comment
+    },
     data () {
       return {
         articleData: {}
@@ -62,9 +71,9 @@
   @import "./stylus/_settings.styl"
   .article-content
     /*font-size: 15px*/
-    margin-top: 1rem
-    padding-top: 1.5rem
-    border-top: 1px solid rgba(202,202,202,.5)
+    margin-top 1rem
+    padding-top 1.5rem
+    border-top 1px solid rgba(202,202,202,.5)
   .markdown-content
     img
       max-width 100%
