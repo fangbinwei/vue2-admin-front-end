@@ -42,6 +42,7 @@
           </div>
         </div>
         <el-pagination
+          v-show="articleLoaded"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="currentPage"
@@ -67,6 +68,7 @@
     },
     data () {
       return {
+        articleLoaded: false,
         currentPage: 1,
         pageSize: 5,
         totalArticle: 0,
@@ -82,6 +84,7 @@
         }
         getArticleListAPI(reqParams)
           .then((res) => {
+            this.articleLoaded = true
             let queryResult = res.data.result
             this.articleData = queryResult.list
             this.totalArticle = queryResult.total
