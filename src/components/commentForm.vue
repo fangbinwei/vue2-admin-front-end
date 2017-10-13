@@ -14,6 +14,7 @@
         <input type="text"
                id="comment-name"
                v-model.trim="comment.name"
+               placeholder="请输入你的昵称"
                autocomplete="off"
                @keydown.enter="submit">
         <button :disabled="loading"
@@ -25,6 +26,7 @@
 </template>
 
 <script>
+  import {Validator} from '@/utils/validator'
   export default {
     props: {
       loading: {
@@ -48,12 +50,33 @@
           name
         }
         // TODO 表单验证还需要完善
-        if (!content || !name) {
-          this.$message('please check again~')
+        let errorMsg = this.contentValidatorFunc() || this.nameValidatorFunc()
+        if (errorMsg) {
+          this.$message(errorMsg)
         } else {
           this.comment.content = ''
           this.$emit('commented', comment)
         }
+      },
+      contentValidatorFunc () {
+        let validator = new Validator()
+        let self = this
+        validator.add(self.comment.content, 'isNoEmpty', '请输入评论内容!')
+        validator.add(self.comment.content, 'maxLength:150', '评论太长了!')
+        let errorMsg = validator.start()
+        if (errorMsg) document.getElementById('comment-content').focus()
+
+        return errorMsg
+      },
+      nameValidatorFunc () {
+        let validator = new Validator()
+        let self = this
+        validator.add(self.comment.name, 'isNoEmpty', '请输入昵称!')
+        validator.add(self.comment.name, 'maxLength:15', '昵称太长了!')
+        let errorMsg = validator.start()
+        if (errorMsg) document.getElementById('comment-name').focus()
+
+        return errorMsg
       }
     }
   }
