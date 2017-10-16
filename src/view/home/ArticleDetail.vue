@@ -26,7 +26,8 @@
                 <div v-html="articleData.content" class="markdown-content" v-highlight></div>
               </div>
             </article>
-            <div class="comment">
+            <div class="comment" 
+                 v-if="showComment">
               <comment :articleId="$route.query.id"></comment>
             </div>
 
@@ -47,7 +48,8 @@
     },
     data () {
       return {
-        articleData: {}
+        articleData: {},
+        showComment: false
       }
     },
     methods: {
@@ -55,6 +57,7 @@
         queryArticleAPI({id: this.$route.query.id})
           .then((res) => {
             this.articleData = res.data.result
+            this.showComment = true
           })
           .catch(() => {
           })
@@ -63,6 +66,9 @@
     beforeRouteEnter (to, from, next) {
       next((vm) => {
         vm.updateArticleData()
+        let rec = document.getElementById('articles').getBoundingClientRect()
+        let anchor = rec.top + window.pageYOffset
+        window.scrollTo(0, anchor - 20)
       })
     }
   }
@@ -138,6 +144,8 @@
       p
         font-weight 600
         margin-left 0
+        overflow auto
+        // word-wrap break-word
     iframe
       margin 1em 0
     p.tip
