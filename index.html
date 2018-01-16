@@ -12,10 +12,18 @@
         position: fixed;
         width: 100%;
         height: 100%;
-        background-color: rgba(81, 179, 224, 0.2);
+        /* background-color: #f3f3f3; */
+        background-color: #e2e2e2;
+        background-image: url('/static/img/preloadbase.gif');
+        /* background-color: rgba(81, 179, 224, 0.2); */
         opacity: 1;
-        transition: all 1s;
+        transition: all 0.2s;
         z-index: 99999;
+        /* background:
+          linear-gradient(135deg, #708090 22px, #d9ecff 22px, #d9ecff 24px, transparent 24px, transparent 67px, #d9ecff 67px, #d9ecff 69px, transparent 69px),
+          linear-gradient(225deg, #708090 22px, #d9ecff 22px, #d9ecff 24px, transparent 24px, transparent 67px, #d9ecff 67px, #d9ecff 69px, transparent 69px)0 64px;
+          background-color:#708090;
+          background-size: 64px 128px; */
       }
       #pre-load {
         position: absolute;
@@ -24,9 +32,15 @@
         transform: translate(-50%,-50%);
         text-align: center;
       }
+      #pre-load span {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 1.2rem;
+        letter-spacing: 0.15rem;
+        color: #333;
+      }
       #pre-load-content {
-        width: 20px;
-        height: 20px;
+        width: 25px;
+        height: 25px;
         background-color: #47b784;
         display: inline-block;
         -webkit-animation: pre-load 1.2s infinite ease-in-out;
@@ -44,7 +58,7 @@
       <div id="pre-load">
         <span id="pre-load-content"></span>
         <br>
-        <span>正在疯狂加载中...</span>
+        <span>Loading...</span>
       </div>
     </div>
     <div id="app"></div>
