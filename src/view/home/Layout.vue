@@ -1,7 +1,7 @@
 <template>
   <div class="layout">
     <div class="header-box">
-      <header>
+      <header :class="showNav">
         <div class="container-fluid">
           <nav class="navbar navbar-expand-sm navbar-light py-1">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,8 +73,8 @@
         </div>
       </header>
     </div>
-    <div class="header-image container-fluid px-0">
-      <img  :src="image.header" alt="header-image">
+    <div class="header-image-mobile container-fluid px-0">
+      <img  :src="image.header" alt="header-image-mobile">
     </div>
     <main>
       <transition name="slide-left" mode="out-in">
@@ -112,8 +112,13 @@
         showBackToTop: {
           'back-to-top-on': false
         },
+        showNav: {
+          'head-nav-hide': false,
+          'head-nav-show': false
+        },
         threshold: 50,
-        pageYOffset: window.pageYOffset,
+        beforeScroll: window.pageYOffset,
+        scrollUp: false,
         image: {
           header: require('@/../static/img/blogheader.jpg'),
           footer: require('@/../static/img/blogfooter.jpg')
@@ -121,13 +126,35 @@
       }
     },
     methods: {
-      handleShowBackToTop () {
+      handleScroll (e) {
+        // scroll up or down
+        let afterScroll = window.pageYOffset
+        let delta = afterScroll - this.beforeScroll
+        delta < 0 ? this.scrollUp = true : this.scrollUp = false
+        this.beforeScroll = afterScroll
+
+        // button of backing to top and head nav
+        this.handleShowBackToTop(e)
+        this.handleShowNav(e)
+      },
+      handleShowBackToTop (e) {
         switch (window.pageYOffset > this.threshold) {
           case true:
             this.showBackToTop['back-to-top-on'] = true
             break
           case false:
             this.showBackToTop['back-to-top-on'] = false
+        }
+      },
+      handleShowNav (e) {
+        switch (window.pageYOffset > this.threshold) {
+          case true:
+            this.showNav['head-nav-hide'] = true
+            this.scrollUp ? this.showNav['head-nav-show'] = true : this.showNav['head-nav-show'] = false
+            break
+          case false:
+            this.showNav['head-nav-hide'] = false
+            this.showNav['head-nav-show'] = false
         }
       },
       backToTop () {
@@ -141,7 +168,7 @@
       }
     },
     mounted () {
-      $(window).on('scroll', this.handleShowBackToTop)
+      $(window).off('scroll').on('scroll', this.handleScroll)
     }
   }
 
@@ -152,6 +179,7 @@
   }
   .slide-left-enter {
     opacity: 0;
+   transform: translate(-150px,0);
   }
   .slide-left-leave-to {
     opacity: 0;
@@ -161,6 +189,12 @@
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+    font-size: 15px;
+  }
+  @media (min-width: 576px) {
+    html {
+      font-size: 16px;
+    }
   }
   * {
     box-sizing: inherit;
@@ -189,7 +223,7 @@
     color: #fff;
   }
   .back-to-top{
-    background: #222;
+    background-color: #222;
     width: 24px;
     height: 24px;
     line-height: 24px;
@@ -207,9 +241,10 @@
   .back-to-top.back-to-top-on{
     bottom: 19px;
   }
-  .layout {
-    /*background-color: #eaf7fd;*/
-  }
+  /* .layout {
+    background-color: rgb(226,226,226);
+    background-image: url('/static/img/preloadbase.gif')
+  } */
 
   #header-title {
     cursor: pointer;
@@ -220,7 +255,7 @@
     }
   }
   .nav-link {
-    webkit-transition: background-color 0.3s;
+    -webkit-transition: background-color 0.3s;
     -moz-transition: background-color 0.3s;
     -o-transition: background-color 0.3s;
     transition: background-color 0.3s;
@@ -228,37 +263,72 @@
   .nav-link:hover {
     background-color: rgba(221,221,221,.2);
   }
+  .header-box {
+    position: relative;
+  }
   header {
     background-color: rgba(210,239,247,.7);
     display: block;
   }
-  .header-box {
-    /*height: 48px;*/
-    position: relative;
-  }
 
-  .header-image>img {
+  .header-image-mobile>img {
     width: 100%;
     height: auto;
   }
-  .header-image {
+  .header-image-mobile {
     margin-bottom: 1rem;
     overflow: hidden;
   }
-  @media (min-width: 576px) {
-    .header-image {
-      margin-top: -54px;
-      margin-bottom: 1rem;
-      overflow: hidden;
+  @media (min-width: 768px) {
+    .header-image-mobile {
+      display: none;
+    }
+    .header-box {
+      z-index: 200; 
+      height: 54px; 
+      position: relative;
+      animation: headerBox 0.6s ease;
+    }
+    @keyframes headerBox {
+      0%{
+        transform: translateY(-100px);
+        opacity: 0;
+      }
+      100%{
+        transform: translateY(0px);
+        opacity: 1;
+      }
     }
     header {
-      background-color: rgba(0,0,0,0.2);
-      /*background-color: rgba(210,239,247,.7);*/
-      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      /* background-color: rgba(0,0,0,0.1); */
+      transition: all 0.3s ease;
+      background-color: rgba(226, 226, 226, 0.5);
+      background-image: url('/static/img/preloadbase.gif');
+    }
+    .head-nav-hide {
+      transform: translateY(-100px);
+      background-color: rgba(226, 226, 226);
+      /* background-image: url('/static/img/preloadbase.gif'); */
+    }
+    .head-nav-show {
+      transform: translateX(0px);
+      background-color: rgba(226, 226, 226);
+      /* background-image: url('/static/img/preloadbase.gif'); */
     }
   }
   main {
     min-height: 100vh;
+    margin-top: 10vh;
+  }
+  @media (min-width: 768px) {
+    main {
+      margin-top: 15vh;
+    }
+
   }
   .articles>article {
     overflow: hidden;
@@ -270,7 +340,7 @@
 
   }
   .article-category{
-    background: #df2d4f;
+    background-color: #df2d4f;
     padding: 0.3rem 0.6rem;
     margin: 0 1em;
     color: #fff;
@@ -301,8 +371,7 @@
   .article-excerpt {
     margin-top: 1rem;
     padding-top: 1.5rem;
-    text-indent: 2em;
-
+    /* text-indent: 2em; */
   }
 
   /* -------footer----- */
