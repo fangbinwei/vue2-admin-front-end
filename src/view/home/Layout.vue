@@ -76,314 +76,313 @@
     <div class="header-image-mobile container-fluid px-0">
       <img  :src="image.header" alt="header-image-mobile">
     </div>
-    <main>
+    <div class="header-image container-fluid px-0" v-show="$route.name === 'home'">
+    </div>
+    <main :class="{'main-sidebar': showSidebar}">
       <transition name="slide-left" mode="out-in">
         <router-view></router-view>
       </transition>
     </main>
     <footer>
-      <div class="footer-information" :style="{backgroundImage: 'url(' + image.footer + ')'}">
+      <!-- <div class="footer-information" :style="{backgroundImage: 'url(' + image.footer + ')'}"> -->
+      <div class="footer-information">
         <p>Posted by: Fang Binwei</p>
         <p>Contact information: fangbinweiATqq.com</p>
         <a href="http://www.miitbeian.gov.cn" style="text-decoration: none; color: black">浙ICP备17037713号-1</a>
       </div>
 
     </footer>
-    <!--<my-sidebar></my-sidebar>-->
-    <!--TODO back-to-top封装成组件-->
-    <div class="back-to-top d-none d-sm-block "
-         :class="showBackToTop"
-         @click="backToTop">
-      <svg class="icon arrow-up" aria-hidden="true" >
-        <use xlink:href="#icon-top-copy"></use>
-      </svg>
-    </div>
+    <back-to-top :showBackToTop="showBackToTop"></back-to-top>
+    <my-sidebar @sidebarStatus="sidebarHandle"></my-sidebar>
   </div>
 </template>
 <script>
 /* global $:true */
-  import MySidebar from '@/components/sidebar'
-  export default {
-    components: {
-      MySidebar
-    },
-    data () {
-      return {
-        showBackToTop: {
-          'back-to-top-on': false
-        },
-        showNav: {
-          'head-nav-hide': false,
-          'head-nav-show': false
-        },
-        threshold: 50,
-        beforeScroll: window.pageYOffset,
-        scrollUp: false,
-        image: {
-          header: require('@/../static/img/blogheader.jpg'),
-          footer: require('@/../static/img/blogfooter.jpg')
-        }
+import MySidebar from '@/components/sidebar'
+import BackToTop from '@/components/backToTop'
+export default {
+  components: {
+    MySidebar,
+    BackToTop
+  },
+  data () {
+    return {
+      showBackToTop: false,
+      showNav: {
+        'head-nav-hide': false,
+        'head-nav-show': false
+      },
+      showSidebar: false,
+      // scroll threshold
+      threshold: 50,
+      beforeScroll: window.pageYOffset,
+      scrollUp: false,
+      image: {
+        header: require('@/../static/img/blogheader.jpg'),
+        footer: require('@/../static/img/blogfooter.jpg')
       }
-    },
-    methods: {
-      handleScroll (e) {
-        // scroll up or down
-        let afterScroll = window.pageYOffset
-        let delta = afterScroll - this.beforeScroll
-        delta < 0 ? this.scrollUp = true : this.scrollUp = false
-        this.beforeScroll = afterScroll
-
-        // button of backing to top and head nav
-        this.handleShowBackToTop(e)
-        this.handleShowNav(e)
-      },
-      handleShowBackToTop (e) {
-        switch (window.pageYOffset > this.threshold) {
-          case true:
-            this.showBackToTop['back-to-top-on'] = true
-            break
-          case false:
-            this.showBackToTop['back-to-top-on'] = false
-        }
-      },
-      handleShowNav (e) {
-        switch (window.pageYOffset > this.threshold) {
-          case true:
-            this.showNav['head-nav-hide'] = true
-            this.scrollUp ? this.showNav['head-nav-show'] = true : this.showNav['head-nav-show'] = false
-            break
-          case false:
-            this.showNav['head-nav-hide'] = false
-            this.showNav['head-nav-show'] = false
-        }
-      },
-      backToTop () {
-        let $body = $('body, html')
-        $body.stop().animate({
-          scrollTop: 0
-        }, 200)
-      },
-      backToHome () {
-        this.$router.push({name: 'home'})
-      }
-    },
-    mounted () {
-      $(window).off('scroll').on('scroll', this.handleScroll)
     }
-  }
+  },
+  methods: {
+    scrollHandle (e) {
+      // scroll up or down
+      let afterScroll = window.pageYOffset
+      let delta = afterScroll - this.beforeScroll
+      delta < 0 ? (this.scrollUp = true) : (this.scrollUp = false)
+      this.beforeScroll = afterScroll
 
+      // button of backing to top and head nav
+      this.scrollToDo(e)
+    },
+    scrollToDo (e) {
+      switch (window.pageYOffset > this.threshold) {
+        case true:
+        // back-to-top button
+          this.showBackToTop = true
+          // nav
+          this.showNav['head-nav-hide'] = true
+          this.scrollUp
+            ? (this.showNav['head-nav-show'] = true)
+            : (this.showNav['head-nav-show'] = false)
+          break
+        case false:
+        // back-to-top button
+          this.showBackToTop = false
+          // nav
+          this.showNav['head-nav-hide'] = false
+          this.showNav['head-nav-show'] = false
+      }
+    },
+    backToHome () {
+      this.$router.push({ name: 'home' })
+    },
+    sidebarHandle (sidebarStatus) {
+      this.showSidebar = sidebarStatus
+    }
+  },
+  mounted () {
+    $(window)
+      .off('scroll')
+      .on('scroll', this.scrollHandle)
+  }
+}
 </script>
 <style>
-  .slide-left-enter-active, .slide-left-leave-active {
-    transition: all .2s ease;
-  }
-  .slide-left-enter {
-    opacity: 0;
-   transform: translate(-150px,0);
-  }
-  .slide-left-leave-to {
-    opacity: 0;
-    transform: translate(150px,0);
-  }
+.slide-left-enter-active,
+.slide-left-leave-active {
+  transition: all 0.2s ease;
+}
+.slide-left-enter {
+  opacity: 0;
+  transform: translate(-150px, 0);
+}
+.slide-left-leave-to {
+  opacity: 0;
+  transform: translate(150px, 0);
+}
+/* global */
+html {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  font-size: 15px;
+}
+@media (min-width: 576px) {
   html {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    font-size: 15px;
+    font-size: 16px;
   }
-  @media (min-width: 576px) {
-    html {
-      font-size: 16px;
-    }
-  }
-  * {
-    box-sizing: inherit;
-  }
-  h1 {
-    font-size: 2rem !important;
-  }
-  h2 {
-    font-size: 1.5rem !important;
-  }
-  h3 {
-    font-size: 1.17rem !important;
-  }
-  #nprogress {
-    position: relative;
-    z-index: 9999999;
-  }
-  .icon {
-    width: 1em; height: 1em;
-    vertical-align: -0.15em;
-    fill: currentColor;
-    overflow: hidden;
-  }
-  /* back to top */
-  .arrow-up{
-    color: #fff;
-  }
-  .back-to-top{
-    background-color: #222;
-    width: 24px;
-    height: 24px;
-    line-height: 24px;
-    text-align: center;
-    position: fixed;
-    z-index: 1050;
-    right: 30px;
-    cursor: pointer;
-    transition-property: bottom;
-    transition-duration: 0.2s;
-    transition-timing-function: ease-in-out;
-    transition-delay: 0s;
-    bottom: -100px;
-  }
-  .back-to-top.back-to-top-on{
-    bottom: 19px;
-  }
-  /* .layout {
+}
+* {
+  box-sizing: inherit;
+}
+h1 {
+  font-size: 2rem !important;
+}
+h2 {
+  font-size: 1.5rem !important;
+}
+h3 {
+  font-size: 1.17rem !important;
+}
+#nprogress {
+  position: relative;
+  z-index: 9999999;
+}
+.icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}
+/* layout */
+/* .layout {
     background-color: rgb(226,226,226);
     background-image: url('/static/img/preloadbase.gif')
   } */
 
-  #header-title {
-    cursor: pointer;
-  }
-  @media (max-width: 991px) {
-    body {
-      padding-right: 0 !important;
-    }
-  }
-  .nav-link {
-    -webkit-transition: background-color 0.3s;
-    -moz-transition: background-color 0.3s;
-    -o-transition: background-color 0.3s;
-    transition: background-color 0.3s;
-  }
-  .nav-link:hover {
-    background-color: rgba(221,221,221,.2);
+/* header */
+#header-title {
+  cursor: pointer;
+}
+.nav-link {
+  -webkit-transition: background-color 0.3s;
+  -moz-transition: background-color 0.3s;
+  -o-transition: background-color 0.3s;
+  transition: background-color 0.3s;
+}
+.nav-link:hover {
+  background-color: rgba(221, 221, 221, 0.2);
+}
+.header-box {
+  position: relative;
+}
+.header-box header {
+  background-color: rgba(210, 239, 247, 0.7);
+  display: block;
+}
+.header-image-mobile > img {
+  width: 100%;
+  height: auto;
+}
+.header-image-mobile {
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+@media (min-width: 768px) {
+  .header-image-mobile {
+    display: none;
   }
   .header-box {
+    z-index: 200;
+    height: 54px;
     position: relative;
+    animation: headerBox 0.6s ease;
   }
-  header {
-    background-color: rgba(210,239,247,.7);
-    display: block;
-  }
-
-  .header-image-mobile>img {
-    width: 100%;
-    height: auto;
-  }
-  .header-image-mobile {
-    margin-bottom: 1rem;
-    overflow: hidden;
-  }
-  @media (min-width: 768px) {
-    .header-image-mobile {
-      display: none;
-    }
-    .header-box {
-      z-index: 200; 
-      height: 54px; 
-      position: relative;
-      animation: headerBox 0.6s ease;
-    }
-    @keyframes headerBox {
-      0%{
-        transform: translateY(-100px);
-        opacity: 0;
-      }
-      100%{
-        transform: translateY(0px);
-        opacity: 1;
-      }
-    }
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      /* background-color: rgba(0,0,0,0.1); */
-      transition: all 0.3s ease;
-      background-color: rgba(226, 226, 226, 0.5);
-      background-image: url('/static/img/preloadbase.gif');
-    }
-    .head-nav-hide {
+  @keyframes headerBox {
+    0% {
       transform: translateY(-100px);
-      background-color: rgba(226, 226, 226);
-      /* background-image: url('/static/img/preloadbase.gif'); */
+      opacity: 0;
     }
-    .head-nav-show {
-      transform: translateX(0px);
-      background-color: rgba(226, 226, 226);
-      /* background-image: url('/static/img/preloadbase.gif'); */
+    100% {
+      transform: translateY(0px);
+      opacity: 1;
     }
   }
-  main {
-    min-height: 100vh;
-    margin-top: 10vh;
+  .header-box header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    /* background-color: rgba(0,0,0,0.1); */
+    transition: all 0.3s ease;
+    background-color: rgba(226, 226, 226, 0.5);
+    background-image: url('/static/img/preloadbase.gif');
   }
-  @media (min-width: 768px) {
-    main {
-      margin-top: 15vh;
-    }
-
+  .head-nav-hide {
+    transform: translateY(-100px);
+    background-color: rgba(226, 226, 226);
+    /* background-image: url('/static/img/preloadbase.gif'); */
   }
-  .articles>article {
+  .head-nav-show {
+    transform: translateX(0px);
+    background-color: rgba(226, 226, 226);
+    /* background-image: url('/static/img/preloadbase.gif'); */
+  }
+  /* header-image */
+  .header-image {
+    /* margin-top: calc(-15vh - 54px); */
+    margin-top: -54px;
+    margin-bottom: 3rem;
     overflow: hidden;
-    background-color: #fff;
-    padding: 1rem 1rem 0 2rem;
-    margin-bottom: 1rem;
-    box-shadow:1px 1px 1px #ddd;
-    border: 1px solid #eee;
 
+    min-height: 100vh;
+    background-image: url('/static/img/seasons.jpg');
+    background-position-x: right;
+    background-position-y: bottom;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    animation: headerImage 1s ease;
   }
-  .article-category{
-    background-color: #df2d4f;
-    padding: 0.3rem 0.6rem;
-    margin: 0 1em;
-    color: #fff;
-    font-size: 0.8rem;
-    text-decoration: none;
+  @keyframes headerImage {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
   }
-  .article-category:hover{
-    color: #000;
-    text-decoration: none;
-  }
-  .article-title>a {
-    text-decoration: none;
-    color: #41684d;
-    /*color: #42b983;*/
-  }
-  .article-title>a:hover{
-    color: #000;
-    text-decoration: none;
-  }
+}
 
-  .pub-time .views-count {
-    color: #99ad9f;
-    font-size: 1rem;
-  }
-  .pub-time {
-    font-weight: 600;
-  }
-  .article-excerpt {
-    margin-top: 1rem;
-    padding-top: 1.5rem;
-    /* text-indent: 2em; */
-  }
+main {
+  min-height: 100vh;
+  margin-top: 10vh;
+}
+.articles > article {
+  overflow: hidden;
+  background-color: #fff;
+  padding: 1rem 1rem 0 2rem;
+  margin-bottom: 1rem;
+  box-shadow: 1px 1px 1px #ddd;
+  border: 1px solid #eee;
+}
+.article-category {
+  background-color: #df2d4f;
+  padding: 0.3rem 0.6rem;
+  margin: 0 1em;
+  color: #fff;
+  font-size: 0.8rem;
+  text-decoration: none;
+}
+.article-category:hover {
+  color: #000;
+  text-decoration: none;
+}
+.article-title > a {
+  text-decoration: none;
+  color: #41684d;
+  /*color: #42b983;*/
+}
+.article-title > a:hover {
+  color: #000;
+  text-decoration: none;
+}
 
-  /* -------footer----- */
-  .footer-information {
-    text-align: center;
-    padding-top: 60px;
-    padding-bottom: 40px;
-    font-size: 85%;
-    margin-top: 4rem;
-    /*background-image: url(image/bloga.jpg);*/
-    /*background-repeat: no-repeat;*/
-    /*background-position: center;*/
-  }
+.pub-time .views-count {
+  color: #99ad9f;
+  font-size: 1rem;
+}
+.pub-time {
+  font-weight: 600;
+}
+.article-excerpt {
+  margin-top: 1rem;
+  padding-top: 1.5rem;
+  /* text-indent: 2em; */
+}
 
+/* -------footer----- */
+.footer-information {
+  text-align: center;
+  padding-top: 60px;
+  padding-bottom: 40px;
+  font-size: 85%;
+  margin-top: 4rem;
+  background-image: url('/static/img/preloadbase.gif');
+  /*background-repeat: no-repeat;*/
+  /*background-position: center;*/
+}
+/* sidebar */
+main {
+  transition: padding-right 0.3s ease;
+}
+@media (max-width: 991px) {
+  main {
+    padding-right: 0px !important;
+  }
+}
+main.main-sidebar {
+  padding-right: 320px;
+}
 </style>
