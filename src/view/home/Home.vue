@@ -1,7 +1,5 @@
 <template>
   <div>
-      <div class="home-image container-fluid px-0">
-      </div>
       <div class="container">
         <div class="row">
           <div class="col-12 ">
@@ -120,31 +118,6 @@
 </script>
 
 <style scoped>
-/* home image */
-  @media (min-width: 768px) {
-    .home-image {
-      margin-top: calc(-15vh - 54px);
-      margin-bottom: 3rem;
-      overflow: hidden;
-
-      min-height: 100vh;
-      background-image: url('/static/img/seasons.jpg');
-      background-position-x: right;
-      background-position-y: bottom;
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-attachment: fixed;
-      animation: homeImage 1s ease;
-    }
-    @keyframes homeImage {
-      0%{
-        opacity: 0;
-      }
-      100%{
-        opacity: 1;
-      }
-    }
-  }
   .el-pagination {
     text-align: center;
     margin-top: 40px;
