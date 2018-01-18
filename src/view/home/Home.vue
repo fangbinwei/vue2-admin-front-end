@@ -31,10 +31,10 @@
                     {{item.abstract}}
                   </p>
                 </div>
-                <div class="read-more cl-effect-14">
+                <div class="read-more">
                   <router-link class="more-link"
                                :to="{name: 'articleDetail', query: {id: item._id}}">
-                    继续阅读 <span class="meta-nav">→</span>
+                               Read More
                   </router-link>
                 </div>
               </article>
@@ -118,6 +118,7 @@
 </script>
 
 <style scoped>
+ /* 分页 */
   .el-pagination {
     text-align: center;
     margin-top: 40px;
@@ -128,9 +129,10 @@
     word-spacing: 1px;
     letter-spacing: 0.01em;
     text-align: center;
-    margin-top: 20px;
+    margin-top: 4rem;
   }
-  .cl-effect-14 a {
+  .read-more a {
+    border: 1px solid #000;
     padding: 0 20px;
     height: 45px;
     line-height: 45px;
@@ -139,66 +141,17 @@
     margin: 0.5rem;
     letter-spacing: 1px;
     font-weight: 400;
-    text-shadow: 0 0 1px rgba(255, 255, 255, 0.3);
+    text-shadow: 0.1px 0.1px 0.4px rgba(0, 0, 0, 0.6);
     color: rgb(0,0,0);
     text-decoration: none;
+    background-image: linear-gradient(90deg, #fff, #fff, #000, #000);
+    background-size: 300% 300%;
+    background-position: 0% 50%;
+    transition: all 0.4s ease;
+  }
+  .read-more a:hover {
+    color: #fff;
+    background-position: 99% 50%;
   }
 
-  .cl-effect-14 a::before,
-  .cl-effect-14 a::after {
-    position: absolute;
-    width: 45px;
-    height: 1px;
-    background: #C3C3C3;
-    content: '';
-    -webkit-transition: all 0.3s;
-    -moz-transition: all 0.3s;
-    transition: all 0.3s;
-    pointer-events: none;
-  }
-
-  .cl-effect-14 a::before {
-    top: 0;
-    left: 0;
-    -webkit-transform: rotate(90deg);
-    -moz-transform: rotate(90deg);
-    transform: rotate(90deg);
-    -webkit-transform-origin: 0 0;
-    -moz-transform-origin: 0 0;
-    transform-origin: 0 0;
-  }
-
-  .cl-effect-14 a::after {
-    right: 0;
-    bottom: 0;
-    -webkit-transform: rotate(90deg);
-    -moz-transform: rotate(90deg);
-    transform: rotate(90deg);
-    -webkit-transform-origin: 100% 0;
-    -moz-transform-origin: 100% 0;
-    transform-origin: 100% 0;
-  }
-
-  .cl-effect-14 a:hover::before,
-  .cl-effect-14 a:hover::after,
-  .cl-effect-14 a:focus::before,
-  .cl-effect-14 a:focus::after {
-    background: #000;
-  }
-
-  .cl-effect-14 a:hover::before,
-  .cl-effect-14 a:focus::before {
-    left: 50%;
-    -webkit-transform: rotate(0deg) translateX(-50%);
-    -moz-transform: rotate(0deg) translateX(-50%);
-    transform: rotate(0deg) translateX(-50%);
-  }
-
-  .cl-effect-14 a:hover::after,
-  .cl-effect-14 a:focus::after {
-    right: 50%;
-    -webkit-transform: rotate(0deg) translateX(50%);
-    -moz-transform: rotate(0deg) translateX(50%);
-    transform: rotate(0deg) translateX(50%);
-  }
 </style>
