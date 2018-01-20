@@ -8,11 +8,11 @@
           <div class="archives-sum">
             <div>目前共计<span>{{totalArticle}}</span>篇博客!</div>
           </div>
-          <div v-for="(yearItem,yearIndex) in articleData">
+          <div v-for="(yearItem,yearIndex) in articleData" :key="yearIndex">
             <div class="archives-title">
               <span class="title">{{yearItem._id.year}}</span>
             </div>
-            <div class="archives-article" v-for="(item,index) in yearItem.articleList">
+            <div class="archives-article" v-for="(item,index) in yearItem.articleList" :key="index">
               <div>
                 <span class="created-time">{{item.createTime | moment}}</span>
                 <router-link
@@ -55,10 +55,8 @@
           })
       }
     },
-    beforeRouteEnter (to, from, next) {
-      next((vm) => {
-        vm.updateArticleList()
-      })
+    created () {
+      this.updateArticleList()
     }
   }
 </script>

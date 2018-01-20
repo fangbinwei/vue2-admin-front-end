@@ -20,9 +20,19 @@
           </ul>
         </div>
         <div class="col-8 category-list px-0">
-                <!--TODO router-view + :key 会出现问题?-->
+                <!--router-view + :key 会出现问题 是因为created 根据key创建了新的组件, 
+                beforeRouteUpdate在create之前调用, 向后台请求的数据还是保存在了前面旧的组件中
+                在created中异步请求后台数据不会出现问题-->
+          <!-- <transition name="fade" mode="out-in">
+              <router-view></router-view>
+          </transition> -->
+
+          <!-- keep-alive 能复用不同key创建的组件 -->
+          <!-- TODO 把categoryDetail 做为组件插入category, 而不是通过router-view -->
           <transition name="fade" mode="out-in">
-            <router-view></router-view>
+            <keep-alive>
+              <router-view :key="key"></router-view>
+            </keep-alive>
           </transition>
         </div>
       </div>
@@ -33,6 +43,7 @@
 <script>
   import {getArticleCategoryAPI} from '@/api/article'
   export default {
+    name: 'CATEGORY',
     data () {
       return {
         categoryList: []
@@ -40,8 +51,16 @@
     },
     computed: {
       key () {
-        console.log('route', this.$route.path.replace(/\//g, '_'))
         return this.$route.path.replace(/\//g, '_')
+        // console.log('route.path', this.$route.path.startsWith('/category/'))
+        // console.log('route', this.$route.path.replace(/\//g, '_'))
+        // 如果点击category列表中的按钮,则创建key
+        // if (this.$route.path.startsWith('/category/')) {
+        //   return this.$route.path.replace(/\//g, '_')
+        // } else {
+        //   console.log('not start with')
+        //   return
+        // }
       }
     },
     methods: {
@@ -54,10 +73,8 @@
           })
       }
     },
-    beforeRouteEnter (to, from, next) {
-      next((vm) => {
-        vm.updateCategoryList()
-      })
+    created () {
+      this.updateCategoryList()
     }
   }
 

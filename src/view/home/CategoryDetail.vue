@@ -1,8 +1,8 @@
 <template>
   <div>
     <transition name="fade" mode="out-in">
-      <div :key="$route.params.category">
-        <div class="category-title">
+      <div>
+        <div class="category-title" v-if="articleList.length >0">
           <h5 class="title">{{$route.params.category}}</h5>
         </div>
         <div class="category-article"
@@ -36,6 +36,7 @@
         getArticleListByCateAPI({category: this.$route.params.category})
           .then((res) => {
             this.articleList = res.data.result.list
+            console.log(this.articleList)
 //            console.log('articleList', this.articleList)
             this.total = res.data.result.total
           })
@@ -43,17 +44,26 @@
           })
       }
     },
-    // 只会在第一次进入页面的时候出发,因为/category/:categoryName其实只是一个路由 即时categoryName不同
-    beforeRouteEnter (to, from, next) {
-      next((vm) => {
-        vm.updateArticleList()
-      })
-    },
-    beforeRouteUpdate (to, from, next) {
-      next()
-      // 这句话必须在next下面,要不然params会获取旧的数据
+    created () {
       this.updateArticleList()
+      // console.log('create', this)
+    },
+    activated () {
+      // console.log('actived', this)
     }
+    // 只会在第一次进入页面的时候出发,因为/category/:categoryName其实只是一个路由 即时categoryName不同
+    // beforeRouteEnter (to, from, next) {
+    //   next((vm) => {
+    //     console.log('before', vm)
+    //     vm.updateArticleList()
+    //   })
+    // },
+    // beforeRouteUpdate (to, from, next) {
+    //   next()
+    //   console.log('update', this)
+    //   // 这句话必须在next下面,要不然params会获取旧的数据
+    //   this.updateArticleList()
+    // }
   }
 
 </script>
