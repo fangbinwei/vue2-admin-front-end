@@ -80,7 +80,9 @@
     </div>
     <main :class="{'main-sidebar': showSidebar}">
       <transition name="slide-left" mode="out-in">
-        <router-view></router-view>
+        <keep-alive>
+          <router-view></router-view>
+        </keep-alive>
       </transition>
     </main>
     <footer>
@@ -93,13 +95,15 @@
 
     </footer>
     <back-to-top :showBackToTop="showBackToTop"></back-to-top>
-    <my-sidebar @sidebarStatus="sidebarHandle"></my-sidebar>
+    <my-sidebar @sidebarStatus="sidebarHandle" :articleTotal="articleTotal"></my-sidebar>
   </div>
 </template>
 <script>
 /* global $:true */
 import MySidebar from '@/components/sidebar'
 import BackToTop from '@/components/backToTop'
+import {mapState} from 'vuex'
+
 export default {
   components: {
     MySidebar,
@@ -122,6 +126,12 @@ export default {
         footer: require('@/../static/img/blogfooter.jpg')
       }
     }
+  },
+  computed: {
+    ...mapState({
+      articleTotal: state => state.article.total,
+      categoryTotal: state => state.article.category.total
+    })
   },
   methods: {
     scrollHandle (e) {
@@ -239,6 +249,7 @@ h3 {
 }
 .header-box header {
   background-color: rgba(210, 239, 247, 0.7);
+  box-shadow: 0px 4px 8px 2px rgba(17, 17, 17, .06);
   display: block;
 }
 .header-image-mobile > img {
