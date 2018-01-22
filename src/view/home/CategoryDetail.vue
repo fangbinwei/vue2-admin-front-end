@@ -2,8 +2,9 @@
   <div>
     <transition name="fade" mode="out-in">
       <div>
-        <div class="category-title" v-if="articleList.length >0">
-          <h5 class="title">{{$route.params.category}}</h5>
+        <div class="category-title" v-if="title">
+        <!-- <div class="category-title" v-if="articleList.length >0"> -->
+          <h5 class="title">{{title}}</h5>
         </div>
         <div class="category-article"
              v-for="(item,index) in articleList"
@@ -27,8 +28,8 @@
   export default {
     data () {
       return {
-        articleList: [],
-        total: 0
+        title: this.$route.params.category,
+        articleList: []
       }
     },
     methods: {
@@ -36,9 +37,6 @@
         getArticleListByCateAPI({category: this.$route.params.category})
           .then((res) => {
             this.articleList = res.data.result.list
-            console.log(this.articleList)
-//            console.log('articleList', this.articleList)
-            this.total = res.data.result.total
           })
           .catch(() => {
           })
@@ -46,10 +44,6 @@
     },
     created () {
       this.updateArticleList()
-      // console.log('create', this)
-    },
-    activated () {
-      // console.log('actived', this)
     }
     // 只会在第一次进入页面的时候出发,因为/category/:categoryName其实只是一个路由 即时categoryName不同
     // beforeRouteEnter (to, from, next) {
