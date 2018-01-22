@@ -49,7 +49,7 @@
           :page-sizes="[5, 10, 20]"
           :page-size="pageSize"
           layout="total, prev, pager, next, sizes"
-          :total="totalArticle">
+          :total="articleTotal">
         </el-pagination>
 
         <!--<nav>-->
@@ -62,6 +62,7 @@
 <script>
   import {getArticleListAPI} from '@/api/article'
   import Pagination from '@/components/pagination'
+  import {mapState} from 'vuex'
   export default {
     components: {
       Pagination
@@ -71,9 +72,13 @@
         articleLoaded: false,
         currentPage: 1,
         pageSize: 5,
-        totalArticle: 0,
         articleData: []
       }
+    },
+    computed: {
+      ...mapState({
+        articleTotal: state => state.article.articleTotal
+      })
     },
     methods: {
       // TODO 加入加载动画
@@ -87,10 +92,8 @@
             this.articleLoaded = true
             let queryResult = res.data.result
             this.articleData = queryResult.list
-            this.totalArticle = queryResult.total
           })
           .catch(() => {
-//          this.tableLoading = false
           })
       },
       // 每页显示x条
@@ -105,13 +108,8 @@
         this.updateArticleList()
       }
     },
-    beforeRouteEnter (to, from, next) {
-      next((vm) => {
-        vm.updateArticleList()
-        setTimeout(() => {
-          vm.showHomeImage = true
-        }, 0)
-      })
+    created () {
+      this.updateArticleList()
     }
   }
 

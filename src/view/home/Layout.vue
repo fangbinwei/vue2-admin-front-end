@@ -95,7 +95,9 @@
 
     </footer>
     <back-to-top :showBackToTop="showBackToTop"></back-to-top>
-    <my-sidebar @sidebarStatus="sidebarHandle" :articleTotal="articleTotal"></my-sidebar>
+    <my-sidebar @sidebarStatus="sidebarHandle" 
+                :articleTotal="articleTotal" 
+                :categoryTotal="categoryTotal"></my-sidebar>
   </div>
 </template>
 <script>
@@ -129,8 +131,8 @@ export default {
   },
   computed: {
     ...mapState({
-      articleTotal: state => state.article.total,
-      categoryTotal: state => state.article.category.total
+      articleTotal: state => state.article.articleTotal,
+      categoryTotal: state => state.article.categoryTotal
     })
   },
   methods: {
@@ -168,7 +170,13 @@ export default {
     },
     sidebarHandle (sidebarStatus) {
       this.showSidebar = sidebarStatus
+    },
+    updateSidebarData () {
+      this.$store.dispatch('getTotal')
     }
+  },
+  created () {
+    this.updateSidebarData()
   },
   mounted () {
     $(window)

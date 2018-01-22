@@ -6,7 +6,7 @@
         </div>
         <div class="col-8 archives-list px-0">
           <div class="archives-sum">
-            <div>目前共计<span>{{totalArticle}}</span>篇博客!</div>
+            <div>目前共计<span>{{articleTotal}}</span>篇博客!</div>
           </div>
           <div v-for="(yearItem,yearIndex) in articleData" :key="yearIndex">
             <div class="archives-title">
@@ -35,21 +35,24 @@
 
 <script>
   import {getArticleListByDateAPI} from '@/api/article'
+  import {mapState} from 'vuex'
   export default {
     data () {
       return {
-        totalArticle: 0,
         articleData: []
       }
+    },
+    computed: {
+      ...mapState({
+        articleTotal: state => state.article.articleTotal
+      })
     },
     methods: {
       updateArticleList () {
         getArticleListByDateAPI()
           .then((res) => {
             let queryResult = res.data
-//            console.log('res', res)
             this.articleData = queryResult.result
-            this.totalArticle = queryResult.total
           })
           .catch(() => {
           })

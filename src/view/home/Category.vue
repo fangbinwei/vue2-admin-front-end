@@ -5,7 +5,7 @@
         <h3>Tag</h3>
       </div>
       <div class="row justify-content-center">
-        <h4>目前共计<span>{{categoryList.length}}</span>个分类</h4>
+        <h4>目前共计<span>{{categoryTotal}}</span>个分类</h4>
       </div>
       <div class="row justify-content-between mx-0">
         <div class="col-md-3 col-12 category">
@@ -42,6 +42,7 @@
 
 <script>
   import {getArticleCategoryAPI} from '@/api/article'
+  import {mapState} from 'vuex'
   export default {
     name: 'CATEGORY',
     data () {
@@ -52,16 +53,10 @@
     computed: {
       key () {
         return this.$route.path.replace(/\//g, '_')
-        // console.log('route.path', this.$route.path.startsWith('/category/'))
-        // console.log('route', this.$route.path.replace(/\//g, '_'))
-        // 如果点击category列表中的按钮,则创建key
-        // if (this.$route.path.startsWith('/category/')) {
-        //   return this.$route.path.replace(/\//g, '_')
-        // } else {
-        //   console.log('not start with')
-        //   return
-        // }
-      }
+      },
+      ...mapState({
+        categoryTotal: state => state.article.categoryTotal
+      })
     },
     methods: {
       updateCategoryList () {
