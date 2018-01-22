@@ -6,6 +6,10 @@ const user = {
     name: '',
     token: getToken()
   },
+  getters: {
+    token: state => state.token,
+    name: state => state.name
+  },
   mutations: {
     SET_TOKEN (state, token) {
       state.token = token
