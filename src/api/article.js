@@ -32,6 +32,12 @@ export function getArticleCategoryAPI () {
     method: 'get'
   })
 }
+export function getArticleCategoryTotalAPI () {
+  return fetch({
+    url: '/api/getArticleCategoryTotal',
+    method: 'get'
+  })
+}
 export function delArticleAPI (articleIdObj) {
   return fetch({
     url: '/api/delArticle',
