@@ -21,7 +21,7 @@
         <el-table-column
           label="标题"
           width="250">
-          <template scope="scope">
+          <template slot-scope="scope">
             <el-icon name="document"></el-icon>
             <span style="margin-left: 10px">{{ scope.row.title }}</span>
           </template>
@@ -29,7 +29,7 @@
         <el-table-column
           label="发表时间"
           width="200">
-          <template scope="scope">
+          <template slot-scope="scope">
             <el-icon name="time"></el-icon>
             <span style="margin-left: 10px">{{ scope.row.createTime | momentWithYear}}</span>
           </template>
@@ -37,7 +37,7 @@
         <el-table-column
           label="类别"
           width="100">
-          <template scope="scope">
+          <template slot-scope="scope">
             <div slot="reference" class="name-wrapper">
               <el-tag type="primary">{{ scope.row.category }}</el-tag>
             </div>
@@ -46,7 +46,7 @@
         <el-table-column
           label="阅读"
           width="100">
-          <template scope="scope">
+          <template slot-scope="scope">
             <div slot="reference" class="name-wrapper">
               <el-tag type="success">{{ scope.row.visit }}</el-tag>
             </div>
@@ -55,14 +55,14 @@
         <el-table-column
           label="评论"
           width="100">
-          <template scope="scope">
+          <template slot-scope="scope">
             <div slot="reference" class="name-wrapper">
               <el-tag type="danger"></el-tag>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="操作">
-          <template scope="scope">
+          <template slot-scope="scope">
             <el-button
               size="small"
               @click="handleStick(scope.$index, scope.row)">发表</el-button>

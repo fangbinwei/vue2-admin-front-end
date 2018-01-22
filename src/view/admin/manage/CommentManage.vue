@@ -15,14 +15,14 @@
         <el-table-column
           label="姓名"
           width="150">
-          <template scope="scope">
+          <template slot-scope="scope">
             <span style="margin-left: 10px">{{ scope.row.name }}</span>
           </template>
         </el-table-column>
         <el-table-column
           label="发表时间"
           width="200">
-          <template scope="scope">
+          <template slot-scope="scope">
             <el-icon name="time"></el-icon>
             <span style="margin-left: 10px">{{ scope.row.replyTime | momentWithYear}}</span>
           </template>
@@ -30,13 +30,13 @@
         <el-table-column
           label="内容"
           width="250">
-          <template scope="scope">
+          <template slot-scope="scope">
             <el-icon name="document"></el-icon>
             <span style="margin-left: 10px">{{ scope.row.content.slice(0,10)}}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作">
-          <template scope="scope">
+          <template slot-scope="scope">
             <el-button
               size="small"
               @click="handleStick(scope.$index, scope.row)">置顶</el-button>
@@ -45,7 +45,7 @@
               @click="handleWatch(scope.$index, scope.row)">查看</el-button>
             <el-button
               size="small"
-              @click="handleWatch(scope.$index, scope.row)">审核</el-button>
+              @click="handleCheck(scope.$index, scope.row)">审核</el-button>
             <el-button
               size="small"
               type="danger"
@@ -100,6 +100,12 @@
           .catch(() => {
             this.tableLoading = false
           })
+      },
+      handleCheck () {
+      },
+      handleWatch () {
+      },
+      handleStick () {
       }
     },
     beforeRouteEnter (to, from, next) {

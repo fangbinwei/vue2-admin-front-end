@@ -11,7 +11,7 @@
         <el-table-column
           label="类别"
           width="250">
-          <template scope="scope">
+          <template slot-scope="scope">
             <el-icon name="document"></el-icon>
             <span style="margin-left: 10px">{{ scope.row._id }}</span>
           </template>
@@ -19,14 +19,14 @@
         <el-table-column
           label="文章"
           width="100">
-          <template scope="scope">
+          <template slot-scope="scope">
             <div slot="reference" class="name-wrapper">
               <el-tag type="primary">{{ scope.row.count }}</el-tag>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="操作">
-          <template scope="scope">
+          <template slot-scope="scope">
             <el-button
               size="small"
               @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
