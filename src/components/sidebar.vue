@@ -24,42 +24,42 @@
 				</div>
 				<div class="row justify-content-center sidebar-nav">
 					<div class="col-3 sidebar-nav-post">
-						<a href="#">
-							<span class="item-count">64</span>
-							<span>日志</span>
-						</a>
+						<router-link :to="{name: 'archive'}">
+							<span class="item-count">{{articleTotal}}</span>
+							<span>文章</span>
+						</router-link>
 					</div>
 					<div class="col-3 sidebar-nav-category">
-						<a href="#">
-							<span class="item-count">64</span>
+						<router-link :to="{name: 'category'}">
+							<span class="item-count">{{categoryTotal}}</span>
 							<span>分类</span>
-						</a>
+						</router-link>
 					</div>
 					<div class="col-3 sidebar-nav-photo">
 						<a href="#">
-							<span class="item-count">63</span>
-							<span>相册</span>
+							<span class="item-count">0</span>
+							<span>标签</span>
 						</a>
 					</div>
 				</div>
-        <router-link :to="{name: 'admin'}">参观后台</router-link>
+        <router-link :to="{name: 'login'}">Login</router-link>
 			</div>
 		</aside>
   </div>
 
 </template>
-<script>
+  <script>
   export default {
-//    props: {
-//      articleTotal: {
-//        type: Number,
-//        default: 0
-//      },
-//      category: {
-//        type: Number,
-//        default: 0
-//      }
-//    },
+    props: {
+      articleTotal: {
+        type: Number,
+        default: 0
+      },
+      categoryTotal: {
+        type: Number,
+        default: 0
+      }
+    },
     data () {
       return {
         // toggle button arrow/close
@@ -83,7 +83,6 @@
       sideToggleLeave () {
         this.tbStatus['toggle-arrow'] = false
       }
-
     }
   }
 </script>
