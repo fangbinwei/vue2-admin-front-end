@@ -4,7 +4,7 @@
       <div class="row justify-content-sm-around justify-content-center mb-5 align-items-center">
         <div class="profile col-10 col-sm-4">
           <div class="profile-image">
-            <img src="http://i1.piimg.com/567571/d5b3c0f3ca1250fd.jpg" alt="profile-image" />
+            <img src="/static/img/profile.jpg" alt="profile-image" />
           </div>
           <h2>Sleepwalker</h2><span>开始慢慢相信平行世界的尽头有一个我活成我曾经想要的样子</span>
         </div>
