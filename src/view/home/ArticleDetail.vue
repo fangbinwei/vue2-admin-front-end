@@ -66,9 +66,10 @@
     beforeRouteEnter (to, from, next) {
       next((vm) => {
         vm.updateArticleData()
-        let rec = document.getElementById('articles').getBoundingClientRect()
-        let anchor = rec.top + window.pageYOffset
-        window.scrollTo(0, anchor - 20)
+        // window.scrollTo(0, 0)
+        // let rec = document.getElementById('articles').getBoundingClientRect()
+        // let anchor = rec.top + window.pageYOffset
+        // window.scrollTo(0, anchor - 20)
       })
     }
   }

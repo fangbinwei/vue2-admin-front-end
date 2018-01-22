@@ -1,26 +1,6 @@
 import Vue from 'vue'
 import NotFound from '@/view/404'
 // 后台管理
-// import AdminHome from '@/view/admin/AdminHome'
-// import Manage from '@/view/admin/Manage'
-// import Editor from '@/view/admin/Editor'
-// import User from '@/view/admin/User'
-// import ArticleManage from '@/view/admin/manage/ArticleManage'
-// import CategoryManage from '@/view/admin/manage/CategoryManage'
-// import CommentManage from '@/view/admin/manage/CommentManage'
-// import BlogManage from '@/view/admin/manage/BlogManage'
-// import DraftManage from '@/view/admin/manage/DraftManage'
-// import RecycleManage from '@/view/admin/manage/RecycleManage'
-// import Login from '@/view/admin/login'
-
-// // blog页面
-// import Layout from '@/view/home/Layout'
-// import Home from '@/view/home/Home'
-// import ArticleDetail from '@/view/home/ArticleDetail'
-// import Archive from '@/view/home/Archive'
-// import Category from '@/view/home/Category'
-// import CategoryDetail from '@/view/home/CategoryDetail'
-// import About from '@/view/home/About'
 const AdminHome = () => import(/* webpackChunkName: "group-admin" */ '@/view/admin/AdminHome')
 const Manage = () => import(/* webpackChunkName: "group-admin-manage" */ '@/view/admin/Manage')
 const Editor = () => import(/* webpackChunkName: "group-admin" */ '@/view/admin/Editor')
@@ -40,7 +20,7 @@ const ArticleDetail = () => import(/* webpackChunkName: "group-home-detail" */ '
 const Archive = () => import(/* webpackChunkName: "group-home" */ '@/view/home/Archive')
 const Category = () => import(/* webpackChunkName: "group-home" */ '@/view/home/Category')
 const CategoryDetail = () => import(/* webpackChunkName: "group-home-detail" */ '@/view/home/CategoryDetail')
-const About = () => import(/* webpackChunkName: "group-home" */ '@/view/home/About')
+const About = () => import(/* webpackChunkName: "group-home-about" */ '@/view/home/About')
 //
 import Router from 'vue-router'
 // import store from '../store'
@@ -201,7 +181,14 @@ const routes = [
 
 const router = new Router({
   mode: 'history',
-  routes: routes
+  routes: routes,
+  scrollBehavior (to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { x: 0, y: 0 }
+    }
+  }
 })
 
 NProgress.inc()
