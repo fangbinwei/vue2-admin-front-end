@@ -76,7 +76,11 @@
     <div class="header-image-mobile container-fluid px-0">
       <img  :src="image.header" alt="header-image-mobile">
     </div>
-    <div class="header-image container-fluid px-0" v-show="$route.name === 'home'">
+    <div class="header-image container-fluid px-0" 
+         v-show="$route.name === 'home'" 
+         :class="headerImageClass">
+         <div class="header-image-wait" 
+              :class="headerImageWaitClass"></div>
     </div>
     <main :class="{'main-sidebar': showSidebar}">
       <transition name="slide-left" mode="out-in">
@@ -126,6 +130,12 @@ export default {
       image: {
         header: require('@/../static/img/blogheader.jpg'),
         footer: require('@/../static/img/blogfooter.jpg')
+      },
+      headerImageClass: {
+        'header-image-animation': false
+      },
+      headerImageWaitClass: {
+        'header-image-wait-animation': false
       }
     }
   },
@@ -173,10 +183,27 @@ export default {
     },
     updateSidebarData () {
       this.$store.dispatch('getTotal')
+        .then()
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    imageLazyLoad (media, url, callback) {
+      if (window.matchMedia(media).matches) {
+        let headerImage = new Image()
+        headerImage.src = url
+        headerImage.onload = () => {
+          callback.apply(this)
+        }
+      }
     }
   },
   created () {
     this.updateSidebarData()
+    this.imageLazyLoad('(min-width: 768px)', '/static/img/seasons.jpg', function () {
+      this.headerImageWaitClass['header-image-wait-animation'] = true
+      this.headerImageClass['header-image-animation'] = true
+    })
   },
   mounted () {
     $(window)
@@ -314,8 +341,10 @@ h3 {
     margin-top: -54px;
     margin-bottom: 3rem;
     overflow: hidden;
-
-    min-height: 100vh;
+    /* min-height: 100vh; */
+    height: 100vh;
+  }
+  .header-image-animation {
     background-image: url('/static/img/seasons.jpg');
     background-position-x: right;
     background-position-y: bottom;
@@ -323,6 +352,18 @@ h3 {
     background-size: cover;
     background-attachment: fixed;
     animation: headerImage 1s ease;
+  }
+  .header-image-wait {
+    background-image: url('/static/img/heart.gif');
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    opacity: 1;
+    width: 100%;
+    height: 100%;
+  }
+  .header-image-wait-animation {
+    opacity: 0;
+    transition: all 0.5s ease;
   }
   @keyframes headerImage {
     0% {
