@@ -34,7 +34,9 @@
     },
     methods: {
       updateArticleList () {
-        getArticleListByCateAPI({category: this.$route.params.category})
+        let reqParams = {category: this.$route.params.category}
+        if (reqParams.category == null) return
+        getArticleListByCateAPI(reqParams)
           .then((res) => {
             this.articleList = res.data.result.list
           })
