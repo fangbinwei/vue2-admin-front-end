@@ -186,7 +186,13 @@ const router = new Router({
     if (savedPosition) {
       return savedPosition
     } else {
-      return { x: 0, y: 0 }
+      // return { x: 0, y: 0 }
+      // 解决在transition 动画还没执行完, 页面就先滚动到顶部的问题, fires too early
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve({x: 0, y: 0})
+        }, 300)
+      })
     }
   }
 })
