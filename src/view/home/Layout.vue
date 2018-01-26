@@ -76,7 +76,8 @@
     <div class="header-image-mobile container-fluid px-0">
       <img  :src="image.header" alt="header-image-mobile">
     </div>
-    <transition name="translateY">
+    <transition name="translateY" 
+                :css="headerImageTransitionToggle">
       <div class="header-image container-fluid px-0" 
           v-show="$route.name === 'home'" 
           :class="headerImageClass">
@@ -141,7 +142,8 @@ export default {
       headerImageWaitClass: {
         'header-image-leave': false
       },
-      mainTransitionName: 'slide-left'
+      mainTransitionName: 'slide-left',
+      headerImageTransitionToggle: true
     }
   },
   computed: {
@@ -205,10 +207,13 @@ export default {
   },
   watch: {
     '$route' (to, from) {
-      if (from.name === 'home') {
+      console.log('to', to)
+      if (from.name === 'home' && to.name !== 'articleDetail') {
         this.mainTransitionName = 'my-fade'
+        this.headerImageTransitionToggle = true
       } else {
         this.mainTransitionName = 'slide-left'
+        this.headerImageTransitionToggle = false
       }
     }
   },
@@ -237,7 +242,8 @@ export default {
 }
 .slide-left-enter-active,
 .slide-left-leave-active {
-  transition: all 0.2s ease;
+  transition: all .2s ease;
+  /* transition: all 10s ease; */
 }
 .slide-left-enter {
   opacity: 0;
