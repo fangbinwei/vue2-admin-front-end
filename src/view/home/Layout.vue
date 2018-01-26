@@ -76,14 +76,18 @@
     <div class="header-image-mobile container-fluid px-0">
       <img  :src="image.header" alt="header-image-mobile">
     </div>
-    <div class="header-image container-fluid px-0" 
-         v-show="$route.name === 'home'" 
-         :class="headerImageClass">
-         <div class="header-image-wait" 
-              :class="headerImageWaitClass"></div>
-    </div>
+    <transition name="translateY">
+      <div class="header-image container-fluid px-0" 
+          v-show="$route.name === 'home'" 
+          :class="headerImageClass">
+          <div class="header-image-wait" 
+                :class="headerImageWaitClass"></div>
+      </div>
+    </transition>
     <main :class="{'main-sidebar': showSidebar}">
-      <transition name="slide-left" mode="out-in">
+      <!-- <transition name="slide-left"  -->
+      <transition :name="mainTransitionName" 
+                  mode="out-in">
         <keep-alive>
           <router-view></router-view>
         </keep-alive>
@@ -132,11 +136,12 @@ export default {
         footer: require('@/../static/img/blogfooter.jpg')
       },
       headerImageClass: {
-        'header-image-animation': false
+        'header-image-enter': false
       },
       headerImageWaitClass: {
-        'header-image-wait-animation': false
-      }
+        'header-image-leave': false
+      },
+      mainTransitionName: 'slide-left'
     }
   },
   computed: {
@@ -198,11 +203,20 @@ export default {
       }
     }
   },
+  watch: {
+    '$route' (to, from) {
+      if (from.name === 'home') {
+        this.mainTransitionName = 'my-fade'
+      } else {
+        this.mainTransitionName = 'slide-left'
+      }
+    }
+  },
   created () {
     this.updateSidebarData()
     this.imageLazyLoad('(min-width: 768px)', '/static/img/seasons.jpg', function () {
-      this.headerImageWaitClass['header-image-wait-animation'] = true
-      this.headerImageClass['header-image-animation'] = true
+      this.headerImageWaitClass['header-image-leave'] = true
+      this.headerImageClass['header-image-enter'] = true
     })
   },
   mounted () {
@@ -213,6 +227,14 @@ export default {
 }
 </script>
 <style>
+.translateY-leave-active {
+ transition: all .6s ease;
+}
+.translateY-leave-to {
+  height: 0 !important;
+  transform: translateY(-100vh);
+  /* transform: scale(0, 0); */
+}
 .slide-left-enter-active,
 .slide-left-leave-active {
   transition: all 0.2s ease;
@@ -224,6 +246,13 @@ export default {
 .slide-left-leave-to {
   opacity: 0;
   transform: translate(150px, 0);
+}
+.my-fade-enter-active,
+.my-fade-leave-active {
+  transition: all .2s ease;
+}
+.my-fade-enter, .my-fade-leave-to {
+  opacity: 0;
 }
 /* global */
 html {
@@ -344,7 +373,15 @@ h3 {
     /* min-height: 100vh; */
     height: 100vh;
   }
-  .header-image-animation {
+  @keyframes headerImage {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  .header-image-enter {
     background-image: url('/static/img/seasons.jpg');
     background-position-x: right;
     background-position-y: bottom;
@@ -361,23 +398,15 @@ h3 {
     width: 100%;
     height: 100%;
   }
-  .header-image-wait-animation {
+  .header-image-leave {
     opacity: 0;
     transition: all 0.5s ease;
-  }
-  @keyframes headerImage {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
   }
 }
 
 main {
   min-height: 100vh;
-  margin-top: 10vh;
+  padding-top: 10vh;
 }
 .articles > article {
   overflow: hidden;
