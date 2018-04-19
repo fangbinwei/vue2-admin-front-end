@@ -3,19 +3,19 @@
     <comment-form @commented="commentedHandle"
                   :loading="formLoading"></comment-form>
     <div class="comment-list">
-      <div class="loader" v-show="commentLoading">
+      <div class="loader" v-show="comment.commentLoading">
         <span class="comment-spinner">
         </span>
       </div>
       <!--<span class="spinner" v-show="commentLoading"></span>-->
       <ul>
-        <div class="comment-empty" v-if="!commentList.length">
+        <div class="comment-empty" v-if="!comment.commentList.length">
           暂无评论
         </div>
-        <div class="comment-count" v-if="commentList.length">
-          共{{commentCount}}条评论
+        <div class="comment-count" v-if="comment.commentList.length">
+          共{{comment.commentCount}}条评论
         </div>
-        <comment-list v-for="(item, index) in commentList"
+        <comment-list v-for="(item, index) in comment.commentList"
                       :key="index"
                       :comment="item"></comment-list>
       </ul>
@@ -26,22 +26,26 @@
 <script>
   import CommentForm from '@/components/commentForm'
   import CommentList from '@/components/commentList'
-  import {saveCommentAPI, getCommentAPI} from '@/api/article'
+  import {saveCommentAPI} from '@/api/article'
   export default {
     components: {
       CommentForm,
       CommentList
     },
     props: {
-      articleId: ''
+      articleId: String,
+      comment: {
+        default: {
+          commentList: [],
+          commentCount: 0,
+          commentLoading: true
+        }
+      }
     },
     data () {
       return {
         formLoading: false,
-        commentLoading: true,
-        commentData: {},
-        commentList: [],
-        commentCount: 0
+        commentData: {}
       }
     },
     methods: {
@@ -59,29 +63,13 @@
               type: 'success',
               message: res.data.msg
             })
-            this.updateCommentList()
             this.formLoading = false
+            this.$emit('commentUpdate')
           })
           .catch(() => {
             this.formLoading = false
-          })
-      },
-      updateCommentList () {
-        this.commentLoading = true
-        getCommentAPI({articleId: this.articleId})
-          .then((res) => {
-            console.log('updateCommentnList res', res)
-            this.commentList = res.data.result.doc
-            this.commentCount = res.data.result.total
-            this.commentLoading = false
-          })
-          .catch(() => {
-            this.commentLoading = false
           })
       }
-    },
-    mounted () {
-      this.updateCommentList()
     }
   }
 </script>
