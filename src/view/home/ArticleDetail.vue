@@ -28,7 +28,9 @@
             </article>
             <div class="comment" 
                  v-if="showComment">
-              <comment :articleId="$route.query.id"></comment>
+              <comment :comment="comment"
+                       :articleId="$route.query.id"
+                       @commentUpdate=commentUpdateHandle></comment>
             </div>
 
           </div>
@@ -41,7 +43,7 @@
 </template>
 <script>
   import Comment from '@/components/comment'
-  import {queryArticleAPI} from '@/api/article'
+  import {queryArticleAPI, getCommentAPI} from '@/api/article'
   export default {
     components: {
       Comment
@@ -49,11 +51,18 @@
     data () {
       return {
         articleData: {},
-        showComment: false
+        showComment: false,
+        comment: {
+          commentList: [],
+          commentCount: 0,
+          commentLoading: true
+        }
       }
     },
     methods: {
+      // TODO 文章没请求到前,放个mask
       updateArticleData () {
+        // console.log('updateArticle', this.$route.query.id)
         queryArticleAPI({id: this.$route.query.id})
           .then((res) => {
             this.articleData = res.data.result
@@ -61,11 +70,28 @@
           })
           .catch(() => {
           })
+      },
+      updateCommentData () {
+        let comment = this.comment
+        comment.commentLoading = true
+        getCommentAPI({articleId: this.$route.query.id})
+          .then((res) => {
+            comment.commentList = res.data.result.doc
+            comment.commentCount = res.data.result.total
+            comment.commentLoading = false
+          })
+          .catch(() => {
+            comment.commentLoading = false
+          })
+      },
+      commentUpdateHandle () {
+        this.updateCommentData()
       }
     },
     beforeRouteEnter (to, from, next) {
       next((vm) => {
         vm.updateArticleData()
+        vm.updateCommentData()
         // window.scrollTo(0, 0)
         // let rec = document.getElementById('articles').getBoundingClientRect()
         // let anchor = rec.top + window.pageYOffset
